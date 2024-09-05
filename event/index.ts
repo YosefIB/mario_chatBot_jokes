@@ -1,9 +1,10 @@
-const button = document.getElementById('button');
+// const button = document.getElementById('button');
 
-if (button) {
-    button.addEventListener('click', () => {
-        alert('Button clicked!');
-    });
-}
+// if (button) {
+//     button.addEventListener('click', () => {
+//         alert('Button clicked!');
+//     });
+// }
 
 alert('Button clicked!');
+alert("ads");
