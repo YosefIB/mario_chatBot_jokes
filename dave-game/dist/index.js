@@ -4,6 +4,7 @@ var mario = /** @class */ (function () {
         this.mario_URLimage = mario_URLimage;
         this.id = id;
     }
+    mario.prototype.renderMario = function (gameBord) {
+    };
     return mario;
 }());
-r;

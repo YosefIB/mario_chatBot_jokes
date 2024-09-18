@@ -15,6 +15,8 @@ class mario{
         this.id = id;
 
 }
-}
 
-r
+renderMario(gameBord: HTMLDivElement): void {
+    
+}
+}
