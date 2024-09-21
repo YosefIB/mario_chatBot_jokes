@@ -7,13 +7,9 @@ var Mario = /** @class */ (function () {
         this.domElement = document.createElement("div");
     }
     Mario.prototype.renderGameBord = function () {
-        var gameBord = document.createElement('img');
+        var gameBord = document.getElementById("gameBord");
         if (!gameBord)
             throw new Error("error");
-        this.domElement.id = 'main';
-        gameBord.id = 'gameBord';
-        this.domElement.style.border = 'none;';
-        this.domElement.style.width = 'auto';
         gameBord.style.backgroundImage = 'url(images/background_game.avif)';
         gameBord.style.backgroundRepeat = "no-repeat";
         gameBord.style.width = "60vw";

@@ -10,7 +10,7 @@ class Mario{
     mario_URLimage: string;
     id: number;
     domElement: HTMLDivElement; // תמונת רקע ראשית
-    marioelement: HTMLImageElement;
+    marioelement: HTMLImageElement; //תמונת השחקן
 
     constructor(position: position){
         this.position = position;
@@ -22,13 +22,9 @@ class Mario{
 }
 
 renderGameBord(): void {
-    const gameBord = document.createElement('img');
+    const gameBord = document.getElementById("gameBord");
     if (!gameBord) throw new Error("error");
     
-    this.domElement.id = 'main';
-    gameBord.id = 'gameBord';
-    this.domElement.style.border = 'none;'
-    this.domElement.style.width = 'auto';
     gameBord.style.backgroundImage = 'url(images/background_game.avif)';
     gameBord.style.backgroundRepeat = "no-repeat";
     gameBord.style.width = "60vw";

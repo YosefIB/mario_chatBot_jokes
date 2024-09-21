@@ -1,90 +1,125 @@
 "use strict";
 
-var canvas = document.getElementById('gameCanvas');
-var ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-var PLAYER_SIZE = 50;
-var GRAVITY = 0.5;
-var JUMP_STRENGTH = 10;
-var playerX = 100;
-var playerY = canvas.height - PLAYER_SIZE;
-var velocityY = 0;
-var onGround = true;
-var obstacles = [{
-  x: 300,
-  y: canvas.height - 70,
-  width: 100,
-  height: 20
-}, {
-  x: 600,
-  y: canvas.height - 150,
-  width: 100,
-  height: 20
-}];
+var first_time = true;
 
-function drawPlayer() {
-  ctx.fillStyle = 'red';
-  ctx.fillRect(playerX, playerY, PLAYER_SIZE, PLAYER_SIZE);
-}
-
-function drawObstacles() {
-  ctx.fillStyle = 'black';
-
-  for (var _i = 0, obstacles_1 = obstacles; _i < obstacles_1.length; _i++) {
-    var obstacle = obstacles_1[_i];
-    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+var Mario =
+/** @class */
+function () {
+  function Mario(position) {
+    this.position = position;
+    this.mario_URLimage = 'images/mario_player.png';
+    this.id = Math.random();
+    this.domElement = document.createElement("div");
   }
-}
 
-function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+  Mario.prototype.renderGameBord = function () {
+    var gameBord = document.createElement('img');
+    if (!gameBord) throw new Error("error");
+    this.domElement.id = 'main';
+    gameBord.id = 'gameBord';
+    this.domElement.style.border = 'none;';
+    this.domElement.style.width = 'auto';
+    gameBord.style.backgroundImage = 'url(images/background_game.avif)';
+    gameBord.style.backgroundRepeat = "no-repeat";
+    gameBord.style.width = "60vw";
+    gameBord.style.height = "40vh";
+    gameBord.style.border = 'none';
+    gameBord.style.margin = "0px";
+    this.domElement.appendChild(gameBord);
+    document.body.appendChild(this.domElement); // this.domElement.style.backgroundImage = 'url(images/background_game.avif)';
+    // this.domElement.style.width = "50%";
+    // this.domElement.style.height = "50%";
+    // this.domElement.innerHTML = "assdad"
+    // gameBord.style.backgroundImage = 'url(images/background_game.avif)'
+    // gameBord.style.width = "70vw";
+    // gameBord.style.height = "70vh";
+    // gameBord.style.backgroundRepeat = "no-repeat";
+  };
 
-function update() {
-  clearCanvas();
-  drawPlayer();
-  drawObstacles(); // Gravity effect
+  Mario.prototype.renderMario = function (position_mario) {
+    if (!this.marioelement) this.marioelement = document.createElement("img");
+    this.marioelement.src = this.mario_URLimage;
+    this.marioelement.id = String(this.id);
+    this.marioelement.style.width = "3rem";
+    this.marioelement.style.height = "3rem";
+    this.marioelement.style.position = "absolute";
+    this.marioelement.style.left = position_mario.x + "px";
+    this.marioelement.style.top = position_mario.y + "px";
+    this.domElement.appendChild(this.marioelement);
+  };
 
-  if (!onGround) {
-    velocityY += GRAVITY;
-    playerY += velocityY;
-
-    if (playerY + PLAYER_SIZE >= canvas.height) {
-      playerY = canvas.height - PLAYER_SIZE;
-      onGround = true;
-      velocityY = 0;
+  Mario.prototype.moveMario = function (event) {
+    if (first_time) {
+      this.position.x = 0;
+      this.position.y = 335.5;
+      first_time = false;
     }
-  } // Collision detection with obstacles
 
+    switch (event.key) {
+      case 'ArrowUp':
+        // this.position.y -= 7;
+        // this.marioelement.style.transform = "rotate(-90deg)";
+        this.renderMario(this.position);
+        var marioElement_1 = this.domElement.querySelector("img");
+        if (!marioElement_1) throw console.error();
+        var jumpHeight = -100; // גובה הקפיצה בפיקסלים
 
-  for (var _i = 0, obstacles_2 = obstacles; _i < obstacles_2.length; _i++) {
-    var obstacle = obstacles_2[_i];
+        var originalTop_1 = parseInt(window.getComputedStyle(marioElement_1).top) || 0;
+        marioElement_1.style.transition = "top 0.9s"; // זמן הקפיצה
 
-    if (playerX < obstacle.x + obstacle.width && playerX + PLAYER_SIZE > obstacle.x && playerY < obstacle.y + obstacle.height && playerY + PLAYER_SIZE > obstacle.y) {
-      playerY = obstacle.y - PLAYER_SIZE;
-      onGround = true;
-      velocityY = 0;
+        marioElement_1.style.position = "absolute"; // קבע את המיקום לאבסולוטי
+        // קפיצה למעלה
+
+        marioElement_1.style.top = originalTop_1 - jumpHeight + "px"; // החזרת הדמות למקום המקורי לאחר הקפיצה
+
+        setTimeout(function () {
+          marioElement_1.style.top = originalTop_1 + 10 + "px";
+        }, 500); // זמן חזרה
+
+        break;
+
+      case 'ArrowDown':
+        this.position.y += 7;
+        this.marioelement.style.transform = "rotate(90deg)";
+        this.renderMario(this.position);
+        break;
+
+      case 'ArrowLeft':
+        this.position.x -= 7;
+        this.marioelement.style.transform = "scaleX(-1)";
+        this.renderMario(this.position);
+        break;
+
+      case 'ArrowRight':
+        this.position.x += 7;
+        this.marioelement.style.transform = "rotate(0deg)";
+        this.renderMario(this.position);
+        break;
+
+      default:
+        break;
     }
-  }
+  };
+
+  Mario.prototype.move_right = function () {
+    this.position.x += 100;
+    this.renderMario(this.position);
+  };
+
+  return Mario;
+}();
+
+function main() {
+  var mario = new Mario({
+    x: 100,
+    y: 100
+  });
+  mario.renderGameBord();
+  mario.renderMario({
+    x: 1,
+    y: 335.5
+  });
+  document.addEventListener('keydown', function (event) {
+    mario.moveMario(event);
+  });
 }
-
-function jump() {
-  if (onGround) {
-    velocityY = -JUMP_STRENGTH;
-    onGround = false;
-  }
-}
-
-document.addEventListener('keydown', function (event) {
-  if (event.key === ' ') {
-    jump();
-  }
-});
-
-function gameLoop() {
-  update();
-  requestAnimationFrame(gameLoop);
-}
-
-gameLoop();
