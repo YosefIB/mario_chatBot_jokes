@@ -29,11 +29,9 @@ export function insert_jokes(){
 
         });
 
-        console.log(jokes);
+       console.log(jokes);
 
     });
         
-
-    console.log(jokes);
     
     }
