@@ -13,6 +13,8 @@ export function render_jokes() {
     <h2>asdasdsa</h2>
     </div>`;
 
+//jokes.foreach {h1- joke num{$id} - br-catagory $catagory the joke is {$text} 
+
     document.body.appendChild(print);
  
 }
