@@ -3,7 +3,7 @@ import { jokes } from "../controllers/insert_jokes";
 
 
 export function render_jokes() {
-    insert_jokes();
+  //  insert_jokes();
     const print = document.createElement("div");
     if (!print) return console.error();
 
