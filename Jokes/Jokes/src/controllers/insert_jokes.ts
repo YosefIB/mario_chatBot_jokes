@@ -15,9 +15,6 @@ export function insert_jokes(){
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-   
-
-// function push_to_arry
  
         const the_joke = document.getElementById("input_joke") as HTMLInputElement;
         if (!the_joke) return console.error();
@@ -33,6 +30,7 @@ export function insert_jokes(){
         });
 
        console.log(jokes);
+//function render the aray to the dom , render_array , call the function
 
     });
         
