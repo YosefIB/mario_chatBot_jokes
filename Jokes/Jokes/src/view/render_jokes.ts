@@ -6,14 +6,15 @@ export function render_jokes() {
   //  insert_jokes();
     const print = document.createElement("div");
     if (!print) return console.error();
-
+// getbyid("print_to_screen")
+// 
    
-   print.className = "jokes";
-   print.innerHTML += `<div class="joke">
-    <h2>asdasdsa</h2>
-    </div>`;
+  // print.className = "jokes";
+//   print.innerHTML += `<div class="joke">
+ //   <h2>asdasdsa</h2>
+  //  </div>`;
 
-//jokes.foreach {h1- joke num{$id} - br-catagory $catagory the joke is {$text} 
+//jokes.foreach {innerhtml += h1- joke num{$id} - br-catagory $catagory the joke is {$text} 
 
     document.body.appendChild(print);
  
