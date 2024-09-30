@@ -24,7 +24,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -99,10 +98,17 @@ body{
   background-color: rgb(250, 250, 202);
 }
 
-/*
-.container text-center{
-  display: none;
-  
+#print_to_screen {
+  display: flex;
+  margin: auto;
+  font-size: 30px;
 }
-*/
+
+#how_are_you{
+  width: 20%;
+  height: 20%;
+  display: flex;
+  margin: auto;
+
+}
 
