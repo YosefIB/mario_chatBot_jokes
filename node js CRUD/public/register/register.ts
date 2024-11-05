@@ -149,10 +149,9 @@ function registerUser(name: string, phone: string, email: string, password: stri
 
 }
 // controller
-function continueBtn(){
+async function continueBtn(){
    try{
-    window.location.href = "http://localhost:3000/";
-    alert("רישום עבר בהצלחה");
+      window.location.href = "http://localhost:3000/";
    }
    catch(error){
     console.error(error);

@@ -234,9 +234,6 @@ function fetchPosts() {
           data = _a.sent();
           feedElement = document.getElementById("feed");
           if (!feedElement) throw new Error("Feed element not found");
-          if (data.posts.length === 0) return [2
-          /*return*/
-          ];
           renderPosts(data.posts);
           return [3
           /*break*/
@@ -267,20 +264,7 @@ function savePostsToLocalStorage(posts) {
 function loadPostsFromLocalStorage() {
   var posts = localStorage.getItem('posts');
   return posts ? JSON.parse(posts) : [];
-} // async function handleSendPost(event: Event) {
-//     event.preventDefault();
-//     const form = event.target as HTMLFormElement;
-//     const title = (form.elements.namedItem('title') as HTMLInputElement).value;
-//     const text = (form.elements.namedItem('text') as HTMLInputElement).value;
-//     const imageURL = (form.elements.namedItem('imageURL') as HTMLInputElement).value;
-//     const newPost = { title, text, imageURL };
-//     const posts = loadPostsFromLocalStorage();
-//     posts.push(newPost);
-//     savePostsToLocalStorage(posts);
-//     form.reset();
-//     renderPosts();
-// }
-
+}
 
 function renderPosts(posts) {
   var feedElement = document.getElementById('feed');
@@ -295,7 +279,7 @@ function renderPosts(posts) {
 
 function renderPost(post) {
   try {
-    var html = "\n        <div class=\"post\">\n            <h3 id=\"title-" + post.id + "\">" + post.title + "</h3><button onclick=\"handleEditTitle('" + post.id + "')\" >Edit</button><button>Delete</button>\n            <img src=\"" + post.imageURL + "\" alt=\"Image\" />\n            <p>" + post.text + "</p>\n        </div>\n        ";
+    var html = "\n        <div class=\"post\">\n            <h3 id=\"title-" + post.id + "\">" + post.title + "</h3>\n            <img src=\"" + post.imageURL + "\" id=\"img-" + post.id + "\" alt=\"Image\" />\n            <p id=\"text-" + post.id + "\">" + post.text + "</p>\n            <button onclick=\"handleEditTitle('" + post.id + "')\">Edit Title</button>\n            <button onclick=\"handleEditImage('" + post.id + "')\">Edit Image</button>\n            <button onclick=\"handleEditText('" + post.id + "')\">Edit Text</button>\n            <button onclick=\"handleDeletePost('" + post.id + "')\">Delete Post</button>\n        </div>\n        ";
     return html;
   } catch (error) {
     console.error('Error:', error);
@@ -315,9 +299,9 @@ function handleEditTitle(id) {
         titleElement_1.addEventListener("blur", function (event) {
           var title = titleElement_1.innerText;
           console.log("New title:", title);
-          titleElement_1.contentEditable = 'false'; //how to update the title in the server
+          titleElement_1.contentEditable = 'false'; //update the title in the server
 
-          var response = fetch('http://localhost:3000/api/update', {
+          var response = fetch('http://localhost:3000/api/updateTitle', {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json'
@@ -329,6 +313,110 @@ function handleEditTitle(id) {
           });
           if (!response) throw new Error('Failed to update title');
         });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      return [2
+      /*return*/
+      ];
+    });
+  });
+}
+
+function handleEditText(id) {
+  return __awaiter(this, void 0, void 0, function () {
+    var textElement_1;
+    return __generator(this, function (_a) {
+      try {
+        console.log("Edit text:", id);
+        textElement_1 = document.getElementById("text-" + id);
+        if (!textElement_1) throw new Error('Text element not found');
+        textElement_1.contentEditable = 'true';
+        textElement_1.focus();
+        textElement_1.addEventListener("blur", function (event) {
+          var text = textElement_1.innerText;
+          console.log("New text:", text);
+          textElement_1.contentEditable = 'false'; //update the text in the server
+
+          var response = fetch('http://localhost:3000/api/updateText', {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: id,
+              text: text
+            })
+          });
+          if (!response) throw new Error('Failed to update text');
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      return [2
+      /*return*/
+      ];
+    });
+  });
+}
+
+function handleDeletePost(id) {
+  return __awaiter(this, void 0, void 0, function () {
+    var response;
+    return __generator(this, function (_a) {
+      try {
+        console.log("Delete post:", id);
+        response = fetch('http://localhost:3000/api/delete-post', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: id
+          })
+        });
+        fetchPosts();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      return [2
+      /*return*/
+      ];
+    });
+  });
+}
+
+function handleEditImage(id) {
+  return __awaiter(this, void 0, void 0, function () {
+    var imageElement, fileInput_1;
+
+    var _this = this;
+
+    return __generator(this, function (_a) {
+      try {
+        console.log("Edit image:", id);
+        imageElement = document.getElementById("img-" + id);
+        if (!imageElement) throw new Error('Image element not found');
+        fileInput_1 = document.createElement('input');
+        fileInput_1.type = 'file';
+        fileInput_1.accept = 'image/*';
+
+        fileInput_1.onchange = function (event) {
+          return __awaiter(_this, void 0, void 0, function () {
+            var file, formData;
+            return __generator(this, function (_a) {
+              file = fileInput_1.files[0];
+              formData = new FormData();
+              formData.append('image', file);
+              return [2
+              /*return*/
+              ];
+            });
+          });
+        };
       } catch (error) {
         console.error('Error:', error);
       }

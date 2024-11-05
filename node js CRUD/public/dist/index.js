@@ -22,11 +22,7 @@ catch (error) {
 var email = document.getElementById("email");
 var password = document.getElementById("password");
 var send_text = document.getElementById("masseges_to_the_user");
-if (!email)
-    throw new Error;
-if (!password)
-    throw new Error;
-if (!send_text)
+if (!email || !password || !send_text)
     throw new Error;
 // Controller
 function check_login(event) {
