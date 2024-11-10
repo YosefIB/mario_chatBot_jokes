@@ -20,7 +20,7 @@ app.post('/upload-image-endpoint', upload.single('image'), function (req, res) {
 });
 //Routes // includ: add/get/delete/editText/editTitle/
 var postsRoutes_1 = require("./routes/postsRoutes");
-app.use("/api/users", postsRoutes_1["default"]);
+app.use("/api/posts", postsRoutes_1["default"]);
 app.use(express_1["default"].static('public'));
 app.get('/register', function (req, res) {
     res.sendFile(path_1["default"].join(__dirname, '../public/register', 'register.html'));

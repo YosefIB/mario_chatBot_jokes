@@ -23,8 +23,7 @@ app.post('/upload-image-endpoint', upload.single('image'), (req: any, res: any) 
 
 //Routes // includ: add/get/delete/editText/editTitle/
 import usersPostRoutes from './routes/postsRoutes';
-app.use("/api/users", usersPostRoutes);
-
+app.use("/api/posts", usersPostRoutes);
 
 app.use(express.static('public'));
 

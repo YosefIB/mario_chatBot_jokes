@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,7 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var clients = [];
+exports.__esModule = true;
+var clientModel_1 = require("../../src/model/client/clientModel");
 function welecome_show() {
     try {
         var welcomeElement = document.getElementById("welcome");
@@ -46,7 +48,7 @@ function welecome_show() {
             var jsonString = userLoggedIn;
             // convert from string to normal object
             var user = JSON.parse(jsonString);
-            clients.push({
+            clientModel_1.clients.push({
                 id: user.id,
                 name: user.name,
                 phone: user.phone,
@@ -79,7 +81,7 @@ function handleSendPost(event) {
                 case 1:
                     _a.trys.push([1, 4, , 5]);
                     console.log('Sending post:', { title: title, text: text, imageURL: imageURL }); // Debug log
-                    return [4 /*yield*/, fetch('http://localhost:3000/api/users/add-post', {
+                    return [4 /*yield*/, fetch('http://localhost:3000/api/posts/add-post', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ title: title, text: text, imageURL: imageURL })
@@ -110,7 +112,7 @@ function fetchPosts() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, fetch('http://localhost:3000/api/users/get-post')];
+                    return [4 /*yield*/, fetch('http://localhost:3000/api/posts/get-post')];
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, response.json()];
@@ -173,7 +175,7 @@ function handleEditTitle(id) {
                     console.log("New title:", title);
                     titleElement_1.contentEditable = 'false';
                     //update the title in the server
-                    var response = fetch('http://localhost:3000/api/users/editTitle-post', {
+                    var response = fetch('http://localhost:3000/api/posts/editTitle-post', {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: id, title: title })
@@ -205,7 +207,7 @@ function handleEditText(id) {
                     console.log("New text:", text);
                     textElement_1.contentEditable = 'false';
                     //update the text in the server
-                    var response = fetch('http://localhost:3000/api/users/editText-post', {
+                    var response = fetch('http://localhost:3000/api/posts/editText-post', {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: id, text: text })
@@ -227,7 +229,7 @@ function handleDeletePost(id) {
         return __generator(this, function (_a) {
             try {
                 console.log("Delete post:", id);
-                response = fetch('http://localhost:3000/api/users/delete-post', {
+                response = fetch('http://localhost:3000/api/posts/delete-post', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: id })

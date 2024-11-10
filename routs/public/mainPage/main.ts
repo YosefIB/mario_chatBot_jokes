@@ -1,21 +1,5 @@
-interface Post {
-    title: string;
-    text: string;
-    imageURL: string;
-    id: string;
-    editTitle?: boolean;
-    editText?: boolean;
-}
-
-interface Client{
-    id: string;
-    name: string;
-    phone: string;
-    email: string;
-    password: string;
-}
-
-const clients : Client[] =[]; 
+import { Post } from "../../src/model/post/postModel";
+import { Client, clients } from "../../src/model/client/clientModel";
 
 function welecome_show(){
     try{
@@ -62,7 +46,7 @@ async function handleSendPost(event: Event) {
     try {
         console.log('Sending post:', { title, text, imageURL });  // Debug log
 
-        const response = await fetch('http://localhost:3000/api/users/add-post', {
+        const response = await fetch('http://localhost:3000/api/posts/add-post', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title, text, imageURL }),
@@ -83,7 +67,7 @@ async function handleSendPost(event: Event) {
 async function fetchPosts() {
     try {
 
-        const response = await fetch('http://localhost:3000/api/users/get-post');
+        const response = await fetch('http://localhost:3000/api/posts/get-post');
         const data = await response.json();
 
         const feedElement = document.getElementById("feed");
@@ -158,7 +142,7 @@ async function handleEditTitle(id: string) {
 
                 //update the title in the server
                 
-                const response = fetch('http://localhost:3000/api/users/editTitle-post', {
+                const response = fetch('http://localhost:3000/api/posts/editTitle-post', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, title }),
@@ -191,7 +175,7 @@ async function handleEditText(id: string) {
                 
                 //update the text in the server
                 
-                const response = fetch('http://localhost:3000/api/users/editText-post', {
+                const response = fetch('http://localhost:3000/api/posts/editText-post', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, text }),
@@ -207,7 +191,7 @@ async function handleDeletePost(id: string)
 {
     try {
         console.log("Delete post:", id);
-        const response = fetch('http://localhost:3000/api/users/delete-post', {
+        const response = fetch('http://localhost:3000/api/posts/delete-post', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id }),
@@ -280,8 +264,3 @@ function logoff(){
         console.error(error);
     }
 }
-
-
-
-
-
