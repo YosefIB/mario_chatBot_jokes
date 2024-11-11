@@ -7,4 +7,4 @@ export interface Post {
     editText?: boolean;
 }
 
-export let post : Post[] =[]; 
+export let posts: Array<{ title: string, text: string, imageURL: string, id:string }> = [];

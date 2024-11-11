@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
 exports.getPost = void 0;
-var postsModels_1 = require("../../model/posts/postsModels");
+var postModel_1 = require("../../model/post/postModel");
 function getPost(req, res) {
-    res.json({ posts: postsModels_1.posts });
+    res.json({ posts: postModel_1.posts });
 }
 exports.getPost = getPost;

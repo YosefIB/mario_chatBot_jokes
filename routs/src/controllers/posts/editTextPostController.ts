@@ -1,4 +1,4 @@
-import { posts } from "../../model/posts/postsModels";
+import { posts } from "../../model/post/postModel";
 
 export function editTextPost (req:any, res:any){
     try{

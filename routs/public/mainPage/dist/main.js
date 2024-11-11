@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var clientModel_1 = require("../../src/model/client/clientModel");
+var clients = [];
 function welecome_show() {
     try {
         var welcomeElement = document.getElementById("welcome");
@@ -48,7 +48,10 @@ function welecome_show() {
             var jsonString = userLoggedIn;
             // convert from string to normal object
             var user = JSON.parse(jsonString);
-            clientModel_1.clients.push({
+            console.log(user.name);
+            user.name = "xxxxxxxx";
+            welcomeElement.innerHTML = "Hello " + user.name + ", Wellcome To Instegram";
+            clients.push({
                 id: user.id,
                 name: user.name,
                 phone: user.phone,
@@ -56,11 +59,8 @@ function welecome_show() {
                 password: user.password
             });
         }
-        else {
+        else
             console.error("User not logged in");
-            return;
-        }
-        welcomeElement.innerHTML = "Hello " + user.name + ", Wellcome To Instegram";
     }
     catch (error) {
         console.error('Error in welcome_show:', error);
@@ -115,6 +115,8 @@ function fetchPosts() {
                     return [4 /*yield*/, fetch('http://localhost:3000/api/posts/get-post')];
                 case 1:
                     response = _a.sent();
+                    if (!response.ok)
+                        throw new Error('Failed to get');
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
@@ -194,6 +196,7 @@ function handleEditTitle(id) {
 function handleEditText(id) {
     return __awaiter(this, void 0, void 0, function () {
         var textElement_1;
+        var _this = this;
         return __generator(this, function (_a) {
             try {
                 console.log("Edit text:", id);
@@ -202,19 +205,35 @@ function handleEditText(id) {
                     throw new Error('Text element not found');
                 textElement_1.contentEditable = 'true';
                 textElement_1.focus();
-                textElement_1.addEventListener("blur", function (event) {
-                    var text = textElement_1.innerText;
-                    console.log("New text:", text);
-                    textElement_1.contentEditable = 'false';
-                    //update the text in the server
-                    var response = fetch('http://localhost:3000/api/posts/editText-post', {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: id, text: text })
+                textElement_1.addEventListener("blur", function (event) { return __awaiter(_this, void 0, void 0, function () {
+                    var text, response, error_3;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                text = textElement_1.innerText;
+                                console.log("New text:", text);
+                                textElement_1.contentEditable = 'false';
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, fetch('http://localhost:3000/api/posts/editText-post', {
+                                        method: 'PATCH',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ id: id, text: text })
+                                    })];
+                            case 2:
+                                response = _a.sent();
+                                if (!response)
+                                    throw new Error('Failed to update text');
+                                return [3 /*break*/, 4];
+                            case 3:
+                                error_3 = _a.sent();
+                                console.error('Error:', error_3);
+                                return [3 /*break*/, 4];
+                            case 4: return [2 /*return*/];
+                        }
                     });
-                    if (!response)
-                        throw new Error('Failed to update text');
-                });
+                }); });
             }
             catch (error) {
                 console.error('Error:', error);
@@ -225,21 +244,27 @@ function handleEditText(id) {
 }
 function handleDeletePost(id) {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
+        var response, error_4;
         return __generator(this, function (_a) {
-            try {
-                console.log("Delete post:", id);
-                response = fetch('http://localhost:3000/api/posts/delete-post', {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id })
-                });
-                fetchPosts();
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    console.log("Delete post:", id);
+                    return [4 /*yield*/, fetch('http://localhost:3000/api/posts/delete-post', {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: id })
+                        })];
+                case 1:
+                    response = _a.sent();
+                    fetchPosts();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _a.sent();
+                    console.error('Error:', error_4);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (error) {
-                console.error('Error:', error);
-            }
-            return [2 /*return*/];
         });
     });
 }
@@ -258,7 +283,7 @@ function handleEditImage(id) {
                 fileInput_1.accept = 'image/*';
                 // טיפול בשינוי הקובץ שנבחר
                 fileInput_1.onchange = function (event) { return __awaiter(_this, void 0, void 0, function () {
-                    var file, formData, response, data, error_3;
+                    var file, formData, response, data, error_5;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -289,8 +314,8 @@ function handleEditImage(id) {
                                 imageElement_1.src = data.imageUrl; // נניח ששרת מחזיר URL חדש לתמונה
                                 return [3 /*break*/, 5];
                             case 4:
-                                error_3 = _a.sent();
-                                console.error('Error uploading image:', error_3);
+                                error_5 = _a.sent();
+                                console.error('Error uploading image:', error_5);
                                 return [3 /*break*/, 5];
                             case 5: return [2 /*return*/];
                         }

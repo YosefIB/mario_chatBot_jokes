@@ -1,5 +1,15 @@
 import { Post } from "../../src/model/post/postModel";
-import { Client, clients } from "../../src/model/client/clientModel";
+
+interface Client{
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    password: string;
+}
+
+let clients : Client[] =[]; 
+
 
 function welecome_show(){
     try{
@@ -13,6 +23,10 @@ function welecome_show(){
         const jsonString = userLoggedIn;
         // convert from string to normal object
         const user = JSON.parse(jsonString);
+        console.log(user.name)
+        user.name = "xxxxxxxx";
+
+        welcomeElement.innerHTML = `Hello ${user.name}, Wellcome To Instegram`;
 
         clients.push({
             id: user.id,
@@ -20,14 +34,10 @@ function welecome_show(){
             phone: user.phone,
             email: user.email,
             password: user.password
-        }
-
-      } 
-      else{
-        console.error("User not logged in");
-        return;
-      }
-      welcomeElement.innerHTML = `Hello ${user.name}, Wellcome To Instegram`;
+        });
+    }
+      else
+      console.error("User not logged in");      
 
     }
     catch(error){
@@ -68,6 +78,8 @@ async function fetchPosts() {
     try {
 
         const response = await fetch('http://localhost:3000/api/posts/get-post');
+        if (!response.ok) throw new Error('Failed to get');
+
         const data = await response.json();
 
         const feedElement = document.getElementById("feed");
@@ -142,7 +154,7 @@ async function handleEditTitle(id: string) {
 
                 //update the title in the server
                 
-                const response = fetch('http://localhost:3000/api/posts/editTitle-post', {
+                const response =  fetch('http://localhost:3000/api/posts/editTitle-post', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, title }),
@@ -167,31 +179,37 @@ async function handleEditText(id: string) {
         if (!textElement) throw new Error('Text element not found');
         textElement.contentEditable = 'true';
         textElement.focus();
-        textElement.addEventListener("blur", (event) => {
+        textElement.addEventListener("blur",async (event) => {
             
                 const text = textElement.innerText;
                 console.log("New text:", text);
                 textElement.contentEditable = 'false';
                 
                 //update the text in the server
+                try{
                 
-                const response = fetch('http://localhost:3000/api/posts/editText-post', {
+                const response =await fetch('http://localhost:3000/api/posts/editText-post', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, text }),
                 });
                 if (!response) throw new Error('Failed to update text');
-        }}
-        catch (error) {
+            } catch
+            (error) {
+                console.error('Error:', error);
+            }
+    });
+}
+    catch (error) {
         console.error('Error:', error);
-        }
     }
+}
 
 async function handleDeletePost(id: string)
 {
     try {
         console.log("Delete post:", id);
-        const response = fetch('http://localhost:3000/api/posts/delete-post', {
+        const response =await fetch('http://localhost:3000/api/posts/delete-post', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id }),

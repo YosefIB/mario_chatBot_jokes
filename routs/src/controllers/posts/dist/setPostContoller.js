@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.addPost = void 0;
-var postsModels_1 = require("../../model/posts/postsModels");
+var postModel_1 = require("../../model/post/postModel");
 function addPost(req, res) {
     try {
         var _a = req.body, title = _a.title, text = _a.text, imageURL = _a.imageURL;
@@ -10,8 +10,8 @@ function addPost(req, res) {
             return res.status(400).json({ error: "All fields (title, text, imageURL) are required" });
         }
         var id = crypto.randomUUID();
-        postsModels_1.posts.push({ id: id, title: title, text: text, imageURL: imageURL });
-        console.log('Current posts:', postsModels_1.posts);
+        postModel_1.posts.push({ id: id, title: title, text: text, imageURL: imageURL });
+        console.log('Current posts:', postModel_1.posts);
         res.status(201).json({ message: "Post added successfully" });
     }
     catch (error) {
