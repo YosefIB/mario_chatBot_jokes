@@ -1,4 +1,11 @@
-import { Post } from "../../src/model/post/postModel";
+interface Post {
+    title: string;
+    text: string;
+    imageURL: string;
+    id: string;
+    editTitle?: boolean;
+    editText?: boolean;
+}
 
 interface Client{
     id: string;
@@ -9,7 +16,6 @@ interface Client{
 }
 
 let clients : Client[] =[]; 
-
 
 function welecome_show(){
     try{
@@ -24,7 +30,6 @@ function welecome_show(){
         // convert from string to normal object
         const user = JSON.parse(jsonString);
         console.log(user.name)
-        user.name = "xxxxxxxx";
 
         welcomeElement.innerHTML = `Hello ${user.name}, Wellcome To Instegram`;
 
