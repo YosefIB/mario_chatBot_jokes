@@ -18,6 +18,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "mongoose": "^8.8.1",
     "multer": "^1.4.5-lts.1"
   }
 }

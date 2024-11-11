@@ -29,9 +29,7 @@ try {
 var email = document.getElementById("email");
 var password = document.getElementById("password");
 var send_text = document.getElementById("masseges_to_the_user");
-if (!email) throw new Error();
-if (!password) throw new Error();
-if (!send_text) throw new Error(); // Controller
+if (!email || !password || !send_text) throw new Error(); // Controller
 
 function check_login(event) {
   try {
@@ -39,9 +37,9 @@ function check_login(event) {
 
     for (var i = 0; i < users.length; i++) {
       if (users[i].email === email.value && users[i].password === password.value) {
-        send_text.textContent = "You are logged in!";
-        var nextPage = "../userMenu/userMenu.html";
-        window.location.href = nextPage;
+        send_text.textContent = "You are logged in!"; // const nextPage = "../userMenu/userMenu.html";
+
+        window.location.href = "http://localhost:3000/mainPage";
         var enterUser = users[i].name;
         var userIn = users[i];
         localStorage.setItem("username_login_in", JSON.stringify(userIn));
@@ -55,4 +53,8 @@ function check_login(event) {
   } catch (error) {
     console.error("Error while accessing local storage: ", error);
   }
+}
+
+function register() {
+  window.location.href = "http://localhost:3000/register";
 } // View

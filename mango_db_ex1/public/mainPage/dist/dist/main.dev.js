@@ -143,6 +143,34 @@ var __generator = void 0 && (void 0).__generator || function (thisArg, body) {
   }
 };
 
+var clients = [];
+
+function welecome_show() {
+  try {
+    var welcomeElement = document.getElementById("welcome");
+    if (!welcomeElement) throw new Error("Welcome element not found");
+    var userLoggedIn = localStorage.getItem('username_login_in');
+
+    if (userLoggedIn) {
+      // move all the string with all the information to new location
+      var jsonString = userLoggedIn; // convert from string to normal object
+
+      var user = JSON.parse(jsonString);
+      console.log(user.name);
+      welcomeElement.innerHTML = "Hello " + user.name + ", Wellcome To Instegram";
+      clients.push({
+        id: user.id,
+        name: user.name,
+        phone: user.phone,
+        email: user.email,
+        password: user.password
+      });
+    } else console.error("User not logged in");
+  } catch (error) {
+    console.error('Error in welcome_show:', error);
+  }
+}
+
 function handleSendPost(event) {
   return __awaiter(this, void 0, void 0, function () {
     var form, title, text, imageURL, response, error_1;
@@ -167,7 +195,7 @@ function handleSendPost(event) {
 
           return [4
           /*yield*/
-          , fetch('http://localhost:3000/api/add-posts', {
+          , fetch('http://localhost:3000/api/posts/add-post', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -222,10 +250,11 @@ function fetchPosts() {
 
           return [4
           /*yield*/
-          , fetch('http://localhost:3000/api/get-posts')];
+          , fetch('http://localhost:3000/api/posts/get-post')];
 
         case 1:
           response = _a.sent();
+          if (!response.ok) throw new Error('Failed to get');
           return [4
           /*yield*/
           , response.json()];
@@ -256,6 +285,7 @@ function fetchPosts() {
 }
 
 fetchPosts();
+welecome_show();
 
 function savePostsToLocalStorage(posts) {
   localStorage.setItem('posts', JSON.stringify(posts));
@@ -301,7 +331,7 @@ function handleEditTitle(id) {
           console.log("New title:", title);
           titleElement_1.contentEditable = 'false'; //update the title in the server
 
-          var response = fetch('http://localhost:3000/api/updateTitle', {
+          var response = fetch('http://localhost:3000/api/posts/editTitle-post', {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json'
@@ -327,6 +357,9 @@ function handleEditTitle(id) {
 function handleEditText(id) {
   return __awaiter(this, void 0, void 0, function () {
     var textElement_1;
+
+    var _this = this;
+
     return __generator(this, function (_a) {
       try {
         console.log("Edit text:", id);
@@ -335,21 +368,53 @@ function handleEditText(id) {
         textElement_1.contentEditable = 'true';
         textElement_1.focus();
         textElement_1.addEventListener("blur", function (event) {
-          var text = textElement_1.innerText;
-          console.log("New text:", text);
-          textElement_1.contentEditable = 'false'; //update the text in the server
+          return __awaiter(_this, void 0, void 0, function () {
+            var text, response, error_3;
+            return __generator(this, function (_a) {
+              switch (_a.label) {
+                case 0:
+                  text = textElement_1.innerText;
+                  console.log("New text:", text);
+                  textElement_1.contentEditable = 'false';
+                  _a.label = 1;
 
-          var response = fetch('http://localhost:3000/api/updateText', {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              id: id,
-              text: text
-            })
+                case 1:
+                  _a.trys.push([1, 3,, 4]);
+
+                  return [4
+                  /*yield*/
+                  , fetch('http://localhost:3000/api/posts/editText-post', {
+                    method: 'PATCH',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      id: id,
+                      text: text
+                    })
+                  })];
+
+                case 2:
+                  response = _a.sent();
+                  if (!response) throw new Error('Failed to update text');
+                  return [3
+                  /*break*/
+                  , 4];
+
+                case 3:
+                  error_3 = _a.sent();
+                  console.error('Error:', error_3);
+                  return [3
+                  /*break*/
+                  , 4];
+
+                case 4:
+                  return [2
+                  /*return*/
+                  ];
+              }
+            });
           });
-          if (!response) throw new Error('Failed to update text');
         });
       } catch (error) {
         console.error('Error:', error);
@@ -364,20 +429,131 @@ function handleEditText(id) {
 
 function handleDeletePost(id) {
   return __awaiter(this, void 0, void 0, function () {
-    var response;
+    var response, error_4;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          _a.trys.push([0, 2,, 3]);
+
+          console.log("Delete post:", id);
+          return [4
+          /*yield*/
+          , fetch('http://localhost:3000/api/posts/delete-post', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: id
+            })
+          })];
+
+        case 1:
+          response = _a.sent();
+          fetchPosts();
+          return [3
+          /*break*/
+          , 3];
+
+        case 2:
+          error_4 = _a.sent();
+          console.error('Error:', error_4);
+          return [3
+          /*break*/
+          , 3];
+
+        case 3:
+          return [2
+          /*return*/
+          ];
+      }
+    });
+  });
+}
+
+function handleEditImage(id) {
+  return __awaiter(this, void 0, void 0, function () {
+    var imageElement_1, fileInput_1;
+
+    var _this = this;
+
     return __generator(this, function (_a) {
       try {
-        console.log("Delete post:", id);
-        response = fetch('http://localhost:3000/api/delete-post', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: id
-          })
-        });
-        fetchPosts();
+        console.log("Edit image:", id);
+        imageElement_1 = document.getElementById("img-" + id);
+        if (!imageElement_1) throw new Error('Image element not found');
+        fileInput_1 = document.createElement('input');
+        fileInput_1.type = 'file';
+        fileInput_1.accept = 'image/*'; // טיפול בשינוי הקובץ שנבחר
+
+        fileInput_1.onchange = function (event) {
+          return __awaiter(_this, void 0, void 0, function () {
+            var file, formData, response, data, error_5;
+            return __generator(this, function (_a) {
+              switch (_a.label) {
+                case 0:
+                  file = fileInput_1.files ? fileInput_1.files[0] : null;
+
+                  if (!file) {
+                    console.error('No file selected');
+                    return [2
+                    /*return*/
+                    ];
+                  }
+
+                  formData = new FormData();
+                  formData.append('image', file);
+                  _a.label = 1;
+
+                case 1:
+                  _a.trys.push([1, 4,, 5]);
+
+                  return [4
+                  /*yield*/
+                  , fetch('/upload-image-endpoint', {
+                    method: 'POST',
+                    body: formData
+                  })];
+
+                case 2:
+                  response = _a.sent();
+
+                  if (!response.ok) {
+                    throw new Error('Failed to upload image');
+                  }
+
+                  return [4
+                  /*yield*/
+                  , response.json()];
+
+                case 3:
+                  data = _a.sent();
+                  console.log('Image uploaded successfully:', data); // כאן אתה יכול לעדכן את התמונה החדשה ב-UI
+
+                  imageElement_1.src = data.imageUrl; // נניח ששרת מחזיר URL חדש לתמונה
+
+                  return [3
+                  /*break*/
+                  , 5];
+
+                case 4:
+                  error_5 = _a.sent();
+                  console.error('Error uploading image:', error_5);
+                  return [3
+                  /*break*/
+                  , 5];
+
+                case 5:
+                  return [2
+                  /*return*/
+                  ];
+              }
+            });
+          });
+        }; // הצגת דיאלוג בחירת קובץ
+
+
+        fileInput_1.click();
       } catch (error) {
         console.error('Error:', error);
       }
@@ -389,41 +565,10 @@ function handleDeletePost(id) {
   });
 }
 
-function handleEditImage(id) {
-  return __awaiter(this, void 0, void 0, function () {
-    var imageElement, fileInput_1;
-
-    var _this = this;
-
-    return __generator(this, function (_a) {
-      try {
-        console.log("Edit image:", id);
-        imageElement = document.getElementById("img-" + id);
-        if (!imageElement) throw new Error('Image element not found');
-        fileInput_1 = document.createElement('input');
-        fileInput_1.type = 'file';
-        fileInput_1.accept = 'image/*';
-
-        fileInput_1.onchange = function (event) {
-          return __awaiter(_this, void 0, void 0, function () {
-            var file, formData;
-            return __generator(this, function (_a) {
-              file = fileInput_1.files[0];
-              formData = new FormData();
-              formData.append('image', file);
-              return [2
-              /*return*/
-              ];
-            });
-          });
-        };
-      } catch (error) {
-        console.error('Error:', error);
-      }
-
-      return [2
-      /*return*/
-      ];
-    });
-  });
+function logoff() {
+  try {
+    window.location.href = "http://localhost:3000/";
+  } catch (error) {
+    console.error(error);
+  }
 }

@@ -1,6 +1,8 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import path from 'path';
+import { model, Schema } from "mongoose";
 
 const app = express();
 const port = 3000;
@@ -20,6 +22,54 @@ app.post('/upload-image-endpoint', upload.single('image'), (req: any, res: any) 
     res.json({ imageUrl });
     console.log('imahe', imageUrl);
 });
+
+
+//Connect to server database
+const dbUrl = "mongodb+srv://yosefib88:FYdIUMhMIwGscX4y@cluster0.b5vsm.mongodb.net"
+const database = 'fs-jun24';
+
+mongoose.connect(`${dbUrl}/${database}`).then(()=>{
+    console.info("DB connected")
+}).catch((err)=>{
+    console.error(err)
+});
+
+
+// stractur of users
+export const UserSchema = new Schema({
+    username: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+})
+
+export const UserModel = model("User", UserSchema);
+
+async function createUser() {
+    const newUser = new UserModel({
+      username: "yo223sef",
+      password: "oksd112s23kodas",
+      email: "yos32223ef@example.com"
+    });
+  
+    try {
+      await newUser.save();
+      console.log("User saved successfully!");
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
+  }
+  
+  createUser();
 
 //Routes // includ: add/get/delete/editText/editTitle/
 import usersPostRoutes from './routes/postsRoutes';

@@ -4,64 +4,55 @@ exports.__esModule = true;
 
 var express_1 = require("express");
 
+var mongoose_1 = require("mongoose");
+
 var body_parser_1 = require("body-parser");
 
+var path_1 = require("path");
+
 var app = express_1["default"]();
-var port = process.env.PORT || 3000;
-var posts = [];
+var port = 3000;
+
+var multer = require('multer');
+
+var upload = multer({
+  dest: 'uploads/'
+}); // let posts: Array<{ title: string, text: string, imageURL: string, id:string }> = [];
+
 app.use(body_parser_1["default"].json());
-app.use(express_1["default"]["static"]('public/login/login.html'));
-app.post('/api/add-posts', function (req, res) {
-  var _a = req.body,
-      title = _a.title,
-      text = _a.text,
-      imageURL = _a.imageURL;
-  console.log('Received POST request:', req.body);
+app.post('/upload-image-endpoint', upload.single('image'), function (req, res) {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded');
+  } // לדוגמה, נחזיר את כתובת ה-URL של התמונה (בהנחה שאתה שומר את התמונה בשרת)
 
-  if (!title || !text || !imageURL) {
-    return res.status(400).json({
-      error: "All fields (title, text, imageURL) are required"
-    });
-  }
 
-  var id = crypto.randomUUID();
-  posts.push({
-    id: id,
-    title: title,
-    text: text,
-    imageURL: imageURL
-  });
-  console.log('Current posts:', posts);
-  res.status(201).json({
-    message: "Post added successfully"
-  });
-});
-app.get('/api/get-posts', function (req, res) {
+  var imageUrl = "/uploads/" + req.file.filename;
   res.json({
-    posts: posts
+    imageUrl: imageUrl
   });
-});
-app.patch('/api/update', function (req, res) {
-  var _a = req.body,
-      id = _a.id,
-      title = _a.title;
-  var post = posts.find(function (p) {
-    return p.id === id;
-  });
+  console.log('imahe', imageUrl);
+}); //Connect to server database
 
-  if (post) {
-    post.title = title;
-    console.log('Updated post:', post);
-    res.status(200).json({
-      message: "Post updated successfully"
-    });
-    console.log("Post updated successfully");
-    console.log(posts);
-  } else {
-    res.status(404).json({
-      error: "Post not found"
-    });
-  }
+var dbUrl = "mongodb+srv://yosefib88:FYdIUMhMIwGscX4y@cluster0.b5vsm.mongodb.net";
+var database = 'fs-jun24';
+mongoose_1["default"].connect(dbUrl + "/" + database).then(function () {
+  console.info("DB connected");
+})["catch"](function (err) {
+  console.error(err);
+}); //Routes // includ: add/get/delete/editText/editTitle/
+
+var postsRoutes_1 = require("./routes/postsRoutes");
+
+app.use("/api/posts", postsRoutes_1["default"]);
+app.use(express_1["default"]["static"]('public'));
+app.get('/register', function (req, res) {
+  res.sendFile(path_1["default"].join(__dirname, '../public/register', 'register.html'));
+});
+app.get('/login', function (req, res) {
+  res.sendFile(path_1["default"].join(__dirname, '../public/login', 'index.html'));
+});
+app.get('/mainPage', function (req, res) {
+  res.sendFile(path_1["default"].join(__dirname, '../public/mainPage', 'main.html'));
 });
 app.listen(port, function () {
   console.log("Server listening on port " + port);
