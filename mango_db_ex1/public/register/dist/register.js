@@ -146,12 +146,18 @@ function checkData(event) {
 function registerUser(name, phone, email, password) {
     try {
         var user = new User(name, phone, email, password);
-        users.push(user);
-        counterUser++;
+        users.push(user); /* פה זה מערך בתוך הקובץ ולא המערך של השרת */
+        counterUser++; /* זה שומר באחסון המקומי כמה אנשים נרשמו */
         console.log("now user number : " + new_user);
         new_user++;
         localStorage.setItem('new_user', String(new_user));
         localStorage.setItem("users", JSON.stringify(users));
+        /* send to the server */
+        var response = fetch('http://localhost:3000/api/users/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, password: password, email: email, phone: phone })
+        });
     }
     catch (error) {
         console.error(error);

@@ -161,7 +161,7 @@ async function handleEditTitle(id: string) {
                 
                 const response =  fetch('http://localhost:3000/api/posts/editTitle-post', {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json'},
                     body: JSON.stringify({ id, title }),
                 });
                 if (!response) throw new Error('Failed to update title');

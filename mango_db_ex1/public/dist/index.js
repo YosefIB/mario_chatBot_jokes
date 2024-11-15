@@ -37,7 +37,7 @@ function check_login(event) {
                 var enterUser = users[i].name;
                 var userIn = users[i];
                 localStorage.setItem("username_login_in", JSON.stringify(userIn));
-                localStorage.setItem('enterUser', JSON.stringify(enterUser));
+                localStorage.setItem('User name', JSON.stringify(enterUser));
                 console.log("the user " + enterUser + "is logged in");
                 break;
             }
