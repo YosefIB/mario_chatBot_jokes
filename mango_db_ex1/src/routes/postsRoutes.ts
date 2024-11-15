@@ -4,6 +4,7 @@ import { getPost } from '../controllers/posts/getPostController';
 import { deletePost } from '../controllers/posts/deletePostController';
 import { editTitlePost } from '../controllers/posts/editTitlePostController';
 import { editTextPost } from '../controllers/posts/editTextPostController';
+import { showAllPosts } from '../controllers/posts/showAllPosts';
 
 
 const router = express.Router()
@@ -13,6 +14,7 @@ router.get('/get-post', getPost);
 router.delete('/delete-post', deletePost);
 router.patch('/editTitle-post',editTitlePost)
 router.patch('/editText-post',editTextPost);
+router.get('/getAllPosts', showAllPosts);
 
 
 export default router;

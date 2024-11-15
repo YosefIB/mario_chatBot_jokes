@@ -36,6 +36,11 @@ function check_login(event: Event){
     try{
         event.preventDefault();
         // check if the user is logged in
+        const response = fetch('http://localhost:3000/api/users/login', {
+            method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({email: email.value, password: password.value}),
+           });
         for(let i=0; i<users.length; i++){
             if(users[i].email === email.value && users[i].password === password.value){
                 send_text.textContent = "You are logged in!";

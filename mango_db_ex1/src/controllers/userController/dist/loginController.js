@@ -36,38 +36,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addPost = void 0;
-var postModel_1 = require("../../model/post/postModel");
-var postModel_2 = require("../../model/post/postModel");
-exports.addPost = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, text, imageURL, id, newPost, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+exports.loginUser = void 0;
+var usersModel_1 = require("../../model/users/usersModel");
+exports.loginUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, user, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                _a = req.body, title = _a.title, text = _a.text, imageURL = _a.imageURL;
-                console.log('Received POST request:', req.body);
-                if (!title || !text || !imageURL) {
-                    return [2 /*return*/, res.status(400).json({ error: "All fields (title, text, imageURL) are required" })];
+                _c.trys.push([0, 2, , 3]);
+                _a = req.body, email = _a.email, password = _a.password;
+                if (!email || !password) {
+                    throw new Error("Request failed with status " + res.status);
+                    console.log("email or password is required");
                 }
-                id = crypto.randomUUID();
-                postModel_2.posts.push({ id: id, title: title, text: text, imageURL: imageURL });
-                newPost = new postModel_1.PostModel({
-                    title: title,
-                    text: text,
-                    imageURL: imageURL
-                });
-                return [4 /*yield*/, newPost.save()];
+                return [4 /*yield*/, usersModel_1.UserModel.findOne({ email: email })];
             case 1:
-                _b.sent();
-                console.log('Post saved successfully in the database');
-                console.log('Current posts:', postModel_2.posts);
-                res.status(201).json({ message: "Post added successfully" });
+                user = _c.sent();
+                if (!user)
+                    return [2 /*return*/, res.status(400).json({ error: 'User not found' })];
+                res.status(200).json({ message: 'Login successful' });
                 return [3 /*break*/, 3];
             case 2:
-                error_1 = _b.sent();
-                console.error('Error while adding post:', error_1);
-                res.status(500).json({ error: "Internal Server Error" });
+                _b = _c.sent();
+                console.error('Error in loginController: ');
+                res.status(500).json({ error: 'Internal server error' });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

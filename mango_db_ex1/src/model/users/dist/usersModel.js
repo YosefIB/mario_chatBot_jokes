@@ -31,4 +31,4 @@ exports.UserSchema = new mongoose_1.Schema({
         type: String
     }
 });
-exports.UserModel = mongoose_1.model('Users2024', exports.UserSchema);
+exports.UserModel = mongoose_1.model('Users', exports.UserSchema);

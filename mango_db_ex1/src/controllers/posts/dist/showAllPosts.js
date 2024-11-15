@@ -36,38 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addPost = void 0;
+exports.showAllPosts = void 0;
 var postModel_1 = require("../../model/post/postModel");
-var postModel_2 = require("../../model/post/postModel");
-exports.addPost = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, text, imageURL, id, newPost, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+exports.showAllPosts = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var posts, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _b.trys.push([0, 2, , 3]);
-                _a = req.body, title = _a.title, text = _a.text, imageURL = _a.imageURL;
-                console.log('Received POST request:', req.body);
-                if (!title || !text || !imageURL) {
-                    return [2 /*return*/, res.status(400).json({ error: "All fields (title, text, imageURL) are required" })];
-                }
-                id = crypto.randomUUID();
-                postModel_2.posts.push({ id: id, title: title, text: text, imageURL: imageURL });
-                newPost = new postModel_1.PostModel({
-                    title: title,
-                    text: text,
-                    imageURL: imageURL
-                });
-                return [4 /*yield*/, newPost.save()];
+                _a.trys.push([0, 2, , 3]);
+                console.log("Show all posts called");
+                return [4 /*yield*/, postModel_1.PostModel.find()];
             case 1:
-                _b.sent();
-                console.log('Post saved successfully in the database');
-                console.log('Current posts:', postModel_2.posts);
-                res.status(201).json({ message: "Post added successfully" });
+                posts = _a.sent();
+                res.json({ posts: posts });
                 return [3 /*break*/, 3];
             case 2:
-                error_1 = _b.sent();
-                console.error('Error while adding post:', error_1);
-                res.status(500).json({ error: "Internal Server Error" });
+                error_1 = _a.sent();
+                console.error(error_1);
+                res.status(500).json({ error: "Server error" });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

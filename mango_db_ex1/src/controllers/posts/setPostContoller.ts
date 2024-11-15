@@ -1,6 +1,7 @@
+import { PostModel } from "../../model/post/postModel";
 import { posts } from "../../model/post/postModel";
 
-export function addPost (req: any, res: any) {
+export const addPost = async (req: any, res: any) => {
     try{
 
     const { title, text, imageURL } = req.body;
@@ -13,6 +14,14 @@ export function addPost (req: any, res: any) {
 
     const id = crypto.randomUUID();
     posts.push({id, title, text, imageURL });
+
+    const newPost = new PostModel({
+        title,
+        text,
+        imageURL,
+    });
+    await newPost.save();
+    console.log('Post saved successfully in the database');
 
     console.log('Current posts:', posts); 
 

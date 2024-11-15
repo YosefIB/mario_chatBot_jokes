@@ -328,6 +328,46 @@ function handleEditImage(id) {
         });
     });
 }
+function showAllPosts() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data, postsContainer_1, error_6;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch('http://localhost:3000/api/posts/getAllPosts')];
+                case 1:
+                    response = _a.sent();
+                    if (!response.ok)
+                        throw new Error('Failed to get posts');
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    postsContainer_1 = document.getElementById('feed');
+                    if (!data.posts || data.posts.length === 0) {
+                        postsContainer_1.innerHTML = 'No posts found.';
+                        return [2 /*return*/];
+                    }
+                    data.posts.forEach(function (post) {
+                        // יוצרים אלמנט div עבור כל פוסט
+                        var postElement = document.createElement('div');
+                        postElement.classList.add('post'); // הוספת class עבור עיצוב CSS
+                        // מכניסים את כותרת הפוסט ותוכן הפוסט בתוך ה-div
+                        postElement.innerHTML = "\n                <h3>" + post.title + "</h3>\n                <p>" + post.text + "</p>\n                <p><small>Posted on: " + new Date(post.date).toLocaleDateString() + "</small></p>\n            ";
+                        // מוסיפים את הפוסט לאלמנט ה-container
+                        postsContainer_1.appendChild(postElement);
+                    });
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_6 = _a.sent();
+                    // אם קרתה שגיאה, מדפיסים אותה בקונסול
+                    console.error('Error:', error_6);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
 function logoff() {
     try {
         window.location.href = "http://localhost:3000/";

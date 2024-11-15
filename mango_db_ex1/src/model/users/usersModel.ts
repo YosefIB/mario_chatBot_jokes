@@ -16,7 +16,7 @@ export default class usersServer {
 }
 
 
-export const UserSchema = new Schema({      /*   to users register */  
+export const UserSchema = new Schema({ /*   to users register */  
     name: {
         type: String,
         required: true,
@@ -35,6 +35,6 @@ export const UserSchema = new Schema({      /*   to users register */
         },
     })
 
-export const UserModel = model('Users2024', UserSchema);
+export const UserModel = model('Users', UserSchema);
 
 

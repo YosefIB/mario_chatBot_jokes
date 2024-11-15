@@ -278,6 +278,46 @@ async function handleEditImage(id: string) {
     }
 }
 
+async function showAllPosts()
+{
+    try {
+        const response = await fetch('http://localhost:3000/api/posts/getAllPosts');
+        if (!response.ok)
+            throw new Error('Failed to get posts');\
+
+        const data = await response.json();
+        const postsContainer = document.getElementById('feed');
+        if (!data.posts || data.posts.length === 0)
+        {
+            postsContainer.innerHTML = 'No posts found.';
+            return;
+
+        }
+        data.posts.forEach(post => {
+            // יוצרים אלמנט div עבור כל פוסט
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');  // הוספת class עבור עיצוב CSS
+
+            // מכניסים את כותרת הפוסט ותוכן הפוסט בתוך ה-div
+            postElement.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.text}</p>
+                <p><small>Posted on: ${new Date(post.date).toLocaleDateString()}</small></p>
+            `;
+
+            // מוסיפים את הפוסט לאלמנט ה-container
+            postsContainer.appendChild(postElement);
+        });
+
+    } catch (error) {
+        // אם קרתה שגיאה, מדפיסים אותה בקונסול
+        console.error('Error:', error);
+    }
+}
+
+
+}
+
 
 function logoff(){
     try{
