@@ -2,7 +2,6 @@ import { PostModel } from "../../model/post/postModel";
 
 export const showAllPosts = async (req:any, res:any) => {
     try {
-        console.log("Show all posts called");
         const posts = await PostModel.find();
         res.json({ posts });
     } catch (error) {

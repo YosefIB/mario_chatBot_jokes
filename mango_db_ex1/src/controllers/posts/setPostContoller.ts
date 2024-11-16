@@ -5,17 +5,16 @@ export const addPost = async (req: any, res: any) => {
     try{
 
     const { title, text, imageURL } = req.body;
-    
-    console.log('Received POST request:', req.body);  
 
     if (!title || !text || !imageURL) {
         return res.status(400).json({ error: "All fields (title, text, imageURL) are required" });
     }
 
-    const id = crypto.randomUUID();
-    posts.push({id, title, text, imageURL });
+    // const id = crypto.randomUUID();
+    // posts.push({id, title, text, imageURL });
 
     const newPost = new PostModel({
+        id: `id=${crypto.randomUUID()}`,
         title,
         text,
         imageURL,
@@ -23,7 +22,7 @@ export const addPost = async (req: any, res: any) => {
     await newPost.save();
     console.log('Post saved successfully in the database');
 
-    console.log('Current posts:', posts); 
+    console.log('Current posts:', newPost); 
 
     res.status(201).json({ message: "Post added successfully" });
 }

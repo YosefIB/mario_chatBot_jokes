@@ -2,7 +2,7 @@ interface Post {
     title: string;
     text: string;
     imageURL: string;
-    id: string;
+    _id: string;
     editTitle?: boolean;
     editText?: boolean;
 }
@@ -40,10 +40,7 @@ function welecome_show(){
             email: user.email,
             password: user.password
         });
-    }
-      else
-      console.error("User not logged in");      
-
+        }
     }
     catch(error){
         console.error('Error in welcome_show:', error);
@@ -128,13 +125,13 @@ function renderPost(post: Post) {
     try {
         const html = `
         <div class="post">
-            <h3 id="title-${post.id}">${post.title}</h3>
-            <img src="${post.imageURL}" id="img-${post.id}" alt="Image" />
-            <p id="text-${post.id}">${post.text}</p>
-            <button onclick="handleEditTitle('${post.id}')">Edit Title</button>
-            <button onclick="handleEditImage('${post.id}')">Edit Image</button>
-            <button onclick="handleEditText('${post.id}')">Edit Text</button>
-            <button onclick="handleDeletePost('${post.id}')">Delete Post</button>
+            <h3 id="title-${post._id}">${post.title}</h3>
+            <img src="${post.imageURL}" id="img-${post._id}" alt="Image" />
+            <p id="text-${post._id}">${post.text}</p>
+            <button onclick="handleEditTitle('${post._id}')">Edit Title</button>
+            <button onclick="handleEditImage('${post._id}')">Edit Image</button>
+            <button onclick="handleEditText('${post._id}')">Edit Text</button>
+            <button onclick="handleDeletePost('${post._id}')">Delete Post</button>
         </div>
         `;
         return html;
@@ -159,14 +156,12 @@ async function handleEditTitle(id: string) {
 
                 //update the title in the server
                 
-                const response =  fetch('http://localhost:3000/api/posts/editTitle-post', {
+                const response =  fetch(`http://localhost:3000/api/posts/editTitle-post/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json'},
-                    body: JSON.stringify({ id, title }),
+                    body: JSON.stringify({ title }),
                 });
                 if (!response) throw new Error('Failed to update title');
-
-                
 
         });
 
@@ -193,10 +188,10 @@ async function handleEditText(id: string) {
                 //update the text in the server
                 try{
                 
-                const response =await fetch('http://localhost:3000/api/posts/editText-post', {
+                const response =await fetch(`http://localhost:3000/api/posts/editText-post/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, text }),
+                    body: JSON.stringify({text }),
                 });
                 if (!response) throw new Error('Failed to update text');
             } catch
@@ -213,12 +208,14 @@ async function handleEditText(id: string) {
 async function handleDeletePost(id: string)
 {
     try {
+        
         console.log("Delete post:", id);
-        const response =await fetch('http://localhost:3000/api/posts/delete-post', {
+        const response =await fetch(`http://localhost:3000/api/posts/delete-post/${id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id }),
+          
         });
+        const data = await response.json();
         fetchPosts();
 }
     catch (error) {
@@ -283,41 +280,26 @@ async function showAllPosts()
     try {
         const response = await fetch('http://localhost:3000/api/posts/getAllPosts');
         if (!response.ok)
-            throw new Error('Failed to get posts');\
+            throw new Error('Failed to get posts');
 
         const data = await response.json();
         const postsContainer = document.getElementById('feed');
+        if (!postsContainer)
+            throw new Error('Posts container not found');
         if (!data.posts || data.posts.length === 0)
         {
             postsContainer.innerHTML = 'No posts found.';
             return;
 
         }
-        data.posts.forEach(post => {
-            // יוצרים אלמנט div עבור כל פוסט
-            const postElement = document.createElement('div');
-            postElement.classList.add('post');  // הוספת class עבור עיצוב CSS
 
-            // מכניסים את כותרת הפוסט ותוכן הפוסט בתוך ה-div
-            postElement.innerHTML = `
-                <h3>${post.title}</h3>
-                <p>${post.text}</p>
-                <p><small>Posted on: ${new Date(post.date).toLocaleDateString()}</small></p>
-            `;
-
-            // מוסיפים את הפוסט לאלמנט ה-container
-            postsContainer.appendChild(postElement);
-        });
+        renderPosts(data.posts);
 
     } catch (error) {
         // אם קרתה שגיאה, מדפיסים אותה בקונסול
         console.error('Error:', error);
     }
 }
-
-
-}
-
 
 function logoff(){
     try{

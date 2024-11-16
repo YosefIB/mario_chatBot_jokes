@@ -38,21 +38,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.addPost = void 0;
 var postModel_1 = require("../../model/post/postModel");
-var postModel_2 = require("../../model/post/postModel");
 exports.addPost = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, text, imageURL, id, newPost, error_1;
+    var _a, title, text, imageURL, newPost, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 2, , 3]);
                 _a = req.body, title = _a.title, text = _a.text, imageURL = _a.imageURL;
-                console.log('Received POST request:', req.body);
                 if (!title || !text || !imageURL) {
                     return [2 /*return*/, res.status(400).json({ error: "All fields (title, text, imageURL) are required" })];
                 }
-                id = crypto.randomUUID();
-                postModel_2.posts.push({ id: id, title: title, text: text, imageURL: imageURL });
                 newPost = new postModel_1.PostModel({
+                    id: "id=" + crypto.randomUUID(),
                     title: title,
                     text: text,
                     imageURL: imageURL
@@ -61,7 +58,7 @@ exports.addPost = function (req, res) { return __awaiter(void 0, void 0, void 0,
             case 1:
                 _b.sent();
                 console.log('Post saved successfully in the database');
-                console.log('Current posts:', postModel_2.posts);
+                console.log('Current posts:', newPost);
                 res.status(201).json({ message: "Post added successfully" });
                 return [3 /*break*/, 3];
             case 2:

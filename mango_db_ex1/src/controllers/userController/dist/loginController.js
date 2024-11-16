@@ -39,11 +39,11 @@ exports.__esModule = true;
 exports.loginUser = void 0;
 var usersModel_1 = require("../../model/users/usersModel");
 exports.loginUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, user, _b;
+    var _a, email, password, email_user, password_user, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                _c.trys.push([0, 2, , 3]);
+                _c.trys.push([0, 3, , 4]);
                 _a = req.body, email = _a.email, password = _a.password;
                 if (!email || !password) {
                     throw new Error("Request failed with status " + res.status);
@@ -51,17 +51,23 @@ exports.loginUser = function (req, res) { return __awaiter(void 0, void 0, void 
                 }
                 return [4 /*yield*/, usersModel_1.UserModel.findOne({ email: email })];
             case 1:
-                user = _c.sent();
-                if (!user)
+                email_user = _c.sent();
+                if (!email_user)
                     return [2 /*return*/, res.status(400).json({ error: 'User not found' })];
-                res.status(200).json({ message: 'Login successful' });
-                return [3 /*break*/, 3];
+                return [4 /*yield*/, usersModel_1.UserModel.findOne({ password: password })];
             case 2:
+                password_user = _c.sent();
+                if (!password_user)
+                    return [2 /*return*/, res.status(400).json({ error: 'Password is incorrect' })];
+                /* אם הגענו לפה עם - סימן שהמייל שלו והסיסמה קיימים ונכונים */
+                res.status(200).json({ message: 'Login successful' });
+                return [3 /*break*/, 4];
+            case 3:
                 _b = _c.sent();
                 console.error('Error in loginController: ');
                 res.status(500).json({ error: 'Internal server error' });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

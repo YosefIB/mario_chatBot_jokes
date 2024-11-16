@@ -48,14 +48,12 @@ exports.registerUser = function (req, res) { return __awaiter(void 0, void 0, vo
                 if (!name || !phone || !email || !password) {
                     return [2 /*return*/, res.status(400).json({ error: "All fields (name, phone, email, password) are required" })];
                 }
-                console.log("Registration was successful:", name, password, email, phone);
                 return [4 /*yield*/, usersModel_1.UserModel.findOne({ email: email })];
             case 1:
                 user = _b.sent();
                 if (user) {
                     return [2 /*return*/, res.status(400).json({ error: "User with this email already exists" })];
                 }
-                console.log("request bidy:", req.body);
                 newUser = new usersModel_1.UserModel({ name: name, password: password, email: email, phone: phone });
                 console.log("New user:", newUser);
                 return [4 /*yield*/, newUser.save()];

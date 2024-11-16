@@ -56,8 +56,6 @@ function welecome_show() {
                 password: user.password
             });
         }
-        else
-            console.error("User not logged in");
     }
     catch (error) {
         console.error('Error in welcome_show:', error);
@@ -151,7 +149,7 @@ function renderPosts(posts) {
 }
 function renderPost(post) {
     try {
-        var html = "\n        <div class=\"post\">\n            <h3 id=\"title-" + post.id + "\">" + post.title + "</h3>\n            <img src=\"" + post.imageURL + "\" id=\"img-" + post.id + "\" alt=\"Image\" />\n            <p id=\"text-" + post.id + "\">" + post.text + "</p>\n            <button onclick=\"handleEditTitle('" + post.id + "')\">Edit Title</button>\n            <button onclick=\"handleEditImage('" + post.id + "')\">Edit Image</button>\n            <button onclick=\"handleEditText('" + post.id + "')\">Edit Text</button>\n            <button onclick=\"handleDeletePost('" + post.id + "')\">Delete Post</button>\n        </div>\n        ";
+        var html = "\n        <div class=\"post\">\n            <h3 id=\"title-" + post._id + "\">" + post.title + "</h3>\n            <img src=\"" + post.imageURL + "\" id=\"img-" + post._id + "\" alt=\"Image\" />\n            <p id=\"text-" + post._id + "\">" + post.text + "</p>\n            <button onclick=\"handleEditTitle('" + post._id + "')\">Edit Title</button>\n            <button onclick=\"handleEditImage('" + post._id + "')\">Edit Image</button>\n            <button onclick=\"handleEditText('" + post._id + "')\">Edit Text</button>\n            <button onclick=\"handleDeletePost('" + post._id + "')\">Delete Post</button>\n        </div>\n        ";
         return html;
     }
     catch (error) {
@@ -174,10 +172,10 @@ function handleEditTitle(id) {
                     console.log("New title:", title);
                     titleElement_1.contentEditable = 'false';
                     //update the title in the server
-                    var response = fetch('http://localhost:3000/api/posts/editTitle-post', {
+                    var response = fetch("http://localhost:3000/api/posts/editTitle-post/" + id, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: id, title: title })
+                        body: JSON.stringify({ title: title })
                     });
                     if (!response)
                         throw new Error('Failed to update title');
@@ -213,10 +211,10 @@ function handleEditText(id) {
                                 _a.label = 1;
                             case 1:
                                 _a.trys.push([1, 3, , 4]);
-                                return [4 /*yield*/, fetch('http://localhost:3000/api/posts/editText-post', {
+                                return [4 /*yield*/, fetch("http://localhost:3000/api/posts/editText-post/" + id, {
                                         method: 'PATCH',
                                         headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ id: id, text: text })
+                                        body: JSON.stringify({ text: text })
                                     })];
                             case 2:
                                 response = _a.sent();
@@ -241,26 +239,28 @@ function handleEditText(id) {
 }
 function handleDeletePost(id) {
     return __awaiter(this, void 0, void 0, function () {
-        var response, error_4;
+        var response, data, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 3, , 4]);
                     console.log("Delete post:", id);
-                    return [4 /*yield*/, fetch('http://localhost:3000/api/posts/delete-post', {
+                    return [4 /*yield*/, fetch("http://localhost:3000/api/posts/delete-post/" + id, {
                             method: 'DELETE',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: id })
+                            headers: { 'Content-Type': 'application/json' }
                         })];
                 case 1:
                     response = _a.sent();
-                    fetchPosts();
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, response.json()];
                 case 2:
+                    data = _a.sent();
+                    fetchPosts();
+                    return [3 /*break*/, 4];
+                case 3:
                     error_4 = _a.sent();
                     console.error('Error:', error_4);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
@@ -330,7 +330,7 @@ function handleEditImage(id) {
 }
 function showAllPosts() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, data, postsContainer_1, error_6;
+        var response, data, postsContainer, error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -343,20 +343,14 @@ function showAllPosts() {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
-                    postsContainer_1 = document.getElementById('feed');
+                    postsContainer = document.getElementById('feed');
+                    if (!postsContainer)
+                        throw new Error('Posts container not found');
                     if (!data.posts || data.posts.length === 0) {
-                        postsContainer_1.innerHTML = 'No posts found.';
+                        postsContainer.innerHTML = 'No posts found.';
                         return [2 /*return*/];
                     }
-                    data.posts.forEach(function (post) {
-                        // יוצרים אלמנט div עבור כל פוסט
-                        var postElement = document.createElement('div');
-                        postElement.classList.add('post'); // הוספת class עבור עיצוב CSS
-                        // מכניסים את כותרת הפוסט ותוכן הפוסט בתוך ה-div
-                        postElement.innerHTML = "\n                <h3>" + post.title + "</h3>\n                <p>" + post.text + "</p>\n                <p><small>Posted on: " + new Date(post.date).toLocaleDateString() + "</small></p>\n            ";
-                        // מוסיפים את הפוסט לאלמנט ה-container
-                        postsContainer_1.appendChild(postElement);
-                    });
+                    renderPosts(data.posts);
                     return [3 /*break*/, 4];
                 case 3:
                     error_6 = _a.sent();

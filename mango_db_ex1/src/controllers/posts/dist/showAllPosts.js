@@ -44,7 +44,6 @@ exports.showAllPosts = function (req, res) { return __awaiter(void 0, void 0, vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                console.log("Show all posts called");
                 return [4 /*yield*/, postModel_1.PostModel.find()];
             case 1:
                 posts = _a.sent();

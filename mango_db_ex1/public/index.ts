@@ -32,34 +32,36 @@ if (!email || !password || !send_text) throw new Error
 
 
 // Controller
-function check_login(event: Event){
+async function check_login(event: Event){
     try{
         event.preventDefault();
         // check if the user is logged in
-        const response = fetch('http://localhost:3000/api/users/login', {
+        const response = await fetch('http://localhost:3000/api/users/login', {
             method: 'POST',
-           headers: {'Content-Type': 'application/json'},
-           body: JSON.stringify({email: email.value, password: password.value}),
-           });
-        for(let i=0; i<users.length; i++){
-            if(users[i].email === email.value && users[i].password === password.value){
-                send_text.textContent = "You are logged in!";
-                // const nextPage = "../userMenu/userMenu.html";
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email.value, password: password.value }),
+        });
+            if(response.ok)        
                 window.location.href = "http://localhost:3000/mainPage";
-                let enterUser = users[i].name;
-
-                let userIn= users[i];
-
-                localStorage.setItem("username_login_in", JSON.stringify(userIn));
-                localStorage.setItem('User name', JSON.stringify(enterUser));
-                console.log(`the user `+ enterUser +  `is logged in`);
-                break;
-            }
+            else
+            send_text.textContent = "Invalid email or password!";
         }
+             /* בדיקת כניסה דרך אחסון מקומי ולא מסד נתונים חציוני */
+        // for(let i=0; i<users.length; i++)  
+        //     if(users[i].email === email.value && users[i].password === password.value){
+        //         send_text.textContent = "You are logged in!";
+        //         // const nextPage = "../userMenu/userMenu.html";
+        //         window.location.href = "http://localhost:3000/mainPage";
+        //         let enterUser = users[i].name;
 
-        send_text.textContent = "Invalid email or password!";
+        //         let userIn= users[i];
 
-    }
+        //         localStorage.setItem("username_login_in", JSON.stringify(userIn));
+        //         localStorage.setItem('User name', JSON.stringify(enterUser));
+        //         console.log(`the user `+ enterUser +  `is logged in`);
+        //         break;
+        //     }
+
     catch(error){
         console.error("Error while accessing local storage: ", error);
     }
