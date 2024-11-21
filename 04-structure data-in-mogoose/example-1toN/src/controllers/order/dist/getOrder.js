@@ -40,16 +40,12 @@ exports.getOrderByClientID = void 0;
 var orderModel_1 = require("../../model/order/orderModel");
 function getOrderByClientID(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var clientID, orders, error_1;
+        var orders, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    clientID = req.query.clientID;
-                    if (!clientID) {
-                        return [2 /*return*/, res.status(400).send({ error: "Client ID is required" })];
-                    }
-                    return [4 /*yield*/, orderModel_1["default"].find({ clien2tID: clientID }).populate('Client').populate('Product').exec()];
+                    return [4 /*yield*/, orderModel_1["default"].find().populate('Client').populate('Product').exec()];
                 case 1:
                     orders = _a.sent();
                     res.status(200).json(orders);
