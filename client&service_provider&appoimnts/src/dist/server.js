@@ -7,7 +7,7 @@ var port = 3000;
 app.use(express_1["default"].json());
 app.use(express_1["default"].static('public'));
 app.get('/', function (req, res) {
-    res.send('Hello World!');
+    res.send('Hello Wo2rld!');
 });
 //DB
 var dbUrl = "mongodb+srv://yosefib88:FYdIUMhMIwGscX4y@cluster0.b5vsm.mongodb.net";
