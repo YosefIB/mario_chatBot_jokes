@@ -38,6 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 function renderProduct(product) {
     return "\n    <div class=\"product-card\">\n        <img src=\"/api/placeholder/400/320\" alt=\"" + product.name + "\" class=\"product-card__image\">\n        <div class=\"product-card__info\">\n            <span class=\"product-card__category\">" + product.category + "</span>\n            <h2 class=\"product-card__title\">" + product.name + "</h2>\n            <p class=\"product-card__description\">" + product.description + "</p>\n            <div class=\"product-card__footer\">\n                <span class=\"product-card__price\">$" + product.price.toFixed(2) + "</span>\n                <div class=\"product-card__stock\">\n                    <span class=\"product-card__stock-dot\"></span>\n                    " + (product.inStock ? 'In Stock' : 'Out of Stock') + "\n                </div>\n            </div>\n            <button class=\"product-card__button\" onclick=\"handleAddToCart('" + product._id + "')\">Add to Cart</button>\n        </div>\n    </div>\n    ";
 }
+function renderMyProduct(product) {
+    return "\n    <div class=\"product-card\">\n        <img src=\"/api/placeholder/400/320\" alt=\"" + product.name + "\" class=\"product-card__image\">\n        <div class=\"product-card__info\">\n            <span class=\"product-card__category\">" + product.category + "</span>\n            <h2 class=\"product-card__title\">" + product.name + "</h2>\n            <p class=\"product-card__description\">" + product.description + "</p>\n            <div class=\"product-card__footer\">\n                <span class=\"product-card__price\">$" + product.price.toFixed(2) + "</span>\n                <div class=\"product-card__stock\">\n                    <span class=\"product-card__stock-dot\"></span>\n                    " + (product.inStock ? 'In Stock' : 'Out of Stock') + "\n                </div>\n            </div>\n        </div>\n    </div>\n    ";
+}
 function handleGetProducts() {
     return __awaiter(this, void 0, void 0, function () {
         var response, products, productsContainer, error_1;
@@ -52,7 +55,6 @@ function handleGetProducts() {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     products = (_a.sent()).products;
-                    console.log(products);
                     productsContainer = document.querySelector('#products');
                     if (!productsContainer)
                         throw new Error('Products element not found');
@@ -76,7 +78,7 @@ function handleGetProducts() {
 handleGetProducts();
 function handleGetMyProducts() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, products, productsContainer, error_2;
+        var response, products, myProduct, showMyProducts, productsContainer, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -89,10 +91,14 @@ function handleGetMyProducts() {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     products = _a.sent();
+                    myProduct = products.product;
+                    console.log("all objects togther:", myProduct);
+                    showMyProducts = myProduct.map(function (myProduct) { return myProduct.productId; });
+                    console.log("only Products array: ", showMyProducts);
                     productsContainer = document.querySelector('#my-products');
                     if (!productsContainer)
                         throw new Error('Products element not found');
-                    productsContainer.innerHTML = products.map(function (product) { return renderProduct(product); }).join('');
+                    productsContainer.innerHTML = showMyProducts.map(function (product) { return renderMyProduct(product); }).join('');
                     _a.label = 3;
                 case 3: return [3 /*break*/, 5];
                 case 4:
@@ -107,7 +113,7 @@ function handleGetMyProducts() {
 handleGetMyProducts();
 function handleAddToCart(id) {
     try {
-        console.log('Add to cart', id);
+        console.log('item ' + id + ' already added to cart');
         var response = fetch('http://localhost:3000/api/purchase/add-to-cart', {
             method: 'POST',
             headers: {
@@ -115,8 +121,21 @@ function handleAddToCart(id) {
             },
             body: JSON.stringify({ productId: id })
         });
+        if (!response)
+            throw new Error('Failed to add to cart');
     }
     catch (error) {
         console.error('An error occurred during adding to cart:', error);
     }
 }
+// async function showMyProducts() {
+//     try{
+//         const response = await fetch('http://localhost:3000/api/products/my-products')
+//         if (response.ok) {
+//             const products = await response.json();
+//             console.log(products);
+//     }
+//     } catch (error) {
+//         console.error('An error occurred during getting my product:', error);
+//     }
+// }

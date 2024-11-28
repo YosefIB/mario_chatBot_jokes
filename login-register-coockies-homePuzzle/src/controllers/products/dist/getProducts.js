@@ -38,29 +38,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.getProducts = exports.getMyProducts = void 0;
 var productModel_1 = require("../../model/products/productModel");
+var purchaseModel_1 = require("../../model/purchase/purchaseModel");
+var mongoose_1 = require("mongoose");
 function getMyProducts(req, res) {
-    try {
-        var user = req.cookies.user;
-        console.log(user);
-        res.json({ message: "Get all products", useId: user });
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Internal server error " + error.message + " " });
-    }
-}
-exports.getMyProducts = getMyProducts;
-function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var products, error_1;
+        var user, product, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, productModel_1["default"].find()];
+                    user = req.cookies.user;
+                    if (!mongoose_1["default"].Types.ObjectId.isValid(user)) {
+                        throw new Error("Invalid user ID");
+                    }
+                    console.log("the user from get my product: " + user);
+                    if (!user)
+                        throw new Error("Missing required information");
+                    return [4 /*yield*/, purchaseModel_1.PurchaseModel.find({ clientId: user }).populate('productId').populate('clientId').exec()];
                 case 1:
-                    products = _a.sent();
-                    res.status(200).send({ products: products });
+                    product = _a.sent();
+                    if (!product)
+                        throw new Error("Product not found");
+                    res.status(200).json({ message: "Get all products", product: product });
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
@@ -72,4 +71,37 @@ function getProducts(req, res) {
         });
     });
 }
+exports.getMyProducts = getMyProducts;
+function getProducts(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var products, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, productModel_1["default"].find()];
+                case 1:
+                    products = _a.sent();
+                    res.status(200).send({ products: products });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_2 = _a.sent();
+                    console.log(error_2);
+                    res.status(500).json({ message: "Internal server error " + error_2.message + " " });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
 exports.getProducts = getProducts;
+// export async function getProductsByUserId(req: any, res: any) {
+//     try {
+//         const { userId } = req.params;
+//         const products = await Product.find({ userId });
+//         res.status(200).send({ products });
+//     } catch (error: any) {
+//         console.log(error);
+//         res.status(500).json({ message: `Internal server error ${error.message} ` });
+//     }
+// }

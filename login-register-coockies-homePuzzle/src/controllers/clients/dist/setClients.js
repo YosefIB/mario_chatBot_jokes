@@ -93,6 +93,8 @@ function register(req, res) {
                 case 1:
                     //send request to DB
                     _b.sent();
+                    console.log("Register successful");
+                    console.log("the user registration is : " + firstName, lastName, email, password, phone);
                     return [2 /*return*/, res.status(201).send({ message: "User registered successfully" })];
                 case 2:
                     error_2 = _b.sent();
@@ -112,6 +114,8 @@ function login(req, res) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     _a = req.body, email = _a.email, password = _a.password;
+                    if (!email || !password)
+                        throw new Error("Please fill all fields");
                     return [4 /*yield*/, ClientModel_1.ClientModel.findOne({ email: email, password: password })];
                 case 1:
                     user = _b.sent();
@@ -119,7 +123,7 @@ function login(req, res) {
                         return [2 /*return*/, res.status(400).send({ error: "Invalid email or password" })];
                     }
                     //send cookie to client
-                    res.cookie('user', user._id, { httpOnly: true, maxAge: 1000 * 60 * 15 });
+                    res.cookie('user', user._id, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
                     return [2 /*return*/, res.status(200).send({ message: "Login successful" })];
                 case 2:
                     error_3 = _b.sent();

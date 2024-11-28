@@ -51,6 +51,8 @@ export async function register(req: any, res: any) {
             phone
         })
 
+        console.log("Register successful")
+        console.log("the user registration is : " + firstName, lastName, email, password, phone)
         return res.status(201).send({ message: "User registered successfully" });
 
     } catch (error: any) {

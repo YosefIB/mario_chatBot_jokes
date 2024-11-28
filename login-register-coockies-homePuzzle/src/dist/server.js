@@ -12,8 +12,8 @@ app.get('/', function (req, res) {
     res.send('Hello World!');
 });
 //DB
-var dbUrl = "mongodb+srv://tal:k8w0S6ztTx3zowGW@cluster0.0hzknon.mongodb.net";
-var database = 'fs-jun24';
+var dbUrl = "mongodb+srv://yosefib88:FYdIUMhMIwGscX4y@cluster0.b5vsm.mongodb.net";
+var database = 'login_register_cookies_homePuzzle';
 //connection
 mongoose_1["default"].connect(dbUrl + "/" + database).then(function () {
     console.info("DB connected");

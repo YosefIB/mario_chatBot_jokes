@@ -13,8 +13,8 @@ app.get('/', (req, res) => {
 })
 
 //DB
-const dbUrl = "mongodb+srv://tal:k8w0S6ztTx3zowGW@cluster0.0hzknon.mongodb.net"
-const database = 'fs-jun24';
+const dbUrl = "mongodb+srv://yosefib88:FYdIUMhMIwGscX4y@cluster0.b5vsm.mongodb.net"
+const database = 'login_register_cookies_homePuzzle';
 
 //connection
 mongoose.connect(`${dbUrl}/${database}`).then(()=>{

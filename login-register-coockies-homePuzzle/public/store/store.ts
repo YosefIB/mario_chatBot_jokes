@@ -30,13 +30,33 @@ function renderProduct(product: Product) {
     `;
 }
 
+function renderMyProduct(product: Product) {
+    return `
+    <div class="product-card">
+        <img src="/api/placeholder/400/320" alt="${product.name}" class="product-card__image">
+        <div class="product-card__info">
+            <span class="product-card__category">${product.category}</span>
+            <h2 class="product-card__title">${product.name}</h2>
+            <p class="product-card__description">${product.description}</p>
+            <div class="product-card__footer">
+                <span class="product-card__price">$${product.price.toFixed(2)}</span>
+                <div class="product-card__stock">
+                    <span class="product-card__stock-dot"></span>
+                    ${product.inStock ? 'In Stock' : 'Out of Stock'}
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+
 async function handleGetProducts() {
     try {
         const response = await fetch('http://localhost:3000/api/products/get-all-products');
         if (response.ok) {
             const {products} = await response.json();
-            console.log(products);
-          
+
             const productsContainer = document.querySelector('#products');
             if(!productsContainer) throw new Error('Products element not found');
 
@@ -46,7 +66,6 @@ async function handleGetProducts() {
 
             if(!Array.isArray(products)) throw new Error('Products is not an array');
            
-        
             productsContainer.innerHTML = products.map((product: Product) => renderProduct(product)).join('');
         }
     } catch (error) {
@@ -62,10 +81,15 @@ async function handleGetMyProducts() {
         const response = await fetch('http://localhost:3000/api/products/my-products')
         if (response.ok) {
             const products = await response.json();
-            const productsContainer = document.querySelector('#my-products');
-            if (!productsContainer) throw new Error('Products element not found');
+            const myProduct = products.product;
+            console.log(`all objects togther:` , myProduct);
+            const showMyProducts = myProduct.map(myProduct => myProduct.productId);
+            console.log(`only Products array: ` , showMyProducts);
 
-            productsContainer.innerHTML = products.map((product: Product) => renderProduct(product)).join('');
+           const productsContainer = document.querySelector('#my-products');
+         if (!productsContainer) throw new Error('Products element not found');
+
+         productsContainer.innerHTML = showMyProducts.map((product: Product) => renderMyProduct(product)).join('');
         }
 
     } catch (error) {
@@ -78,7 +102,7 @@ handleGetMyProducts();
 
 function handleAddToCart(id:string) {
    try {
-     console.log('Add to cart', id);
+     console.log('item ' + id + ' already added to cart');
      const response = fetch('http://localhost:3000/api/purchase/add-to-cart', {
             method: 'POST',
             headers: {
@@ -86,6 +110,7 @@ function handleAddToCart(id:string) {
             },
             body: JSON.stringify({productId: id})
         });
+        if (!response) throw new Error('Failed to add to cart');
    } catch (error) {
        console.error('An error occurred during adding to cart:', error);
     
@@ -93,3 +118,14 @@ function handleAddToCart(id:string) {
    
 }
 
+// async function showMyProducts() {
+//     try{
+//         const response = await fetch('http://localhost:3000/api/products/my-products')
+//         if (response.ok) {
+//             const products = await response.json();
+//             console.log(products);
+//     }
+//     } catch (error) {
+//         console.error('An error occurred during getting my product:', error);
+//     }
+// }
