@@ -40,21 +40,30 @@ exports.getProducts = exports.getMyProducts = void 0;
 var productModel_1 = require("../../model/products/productModel");
 var purchaseModel_1 = require("../../model/purchase/purchaseModel");
 var mongoose_1 = require("mongoose");
+var setClients_1 = require("../clients/setClients");
+var jwt_simple_1 = require("jwt-simple");
+require("dotenv/config");
 function getMyProducts(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var user, product, error_1;
+        var user, decoded, id, product, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     user = req.cookies.user;
-                    if (!mongoose_1["default"].Types.ObjectId.isValid(user)) {
+                    console.log("before decode", user);
+                    if (!setClients_1.jwt_secret)
+                        throw new Error("Missing JWT secret");
+                    decoded = jwt_simple_1["default"].decode(user, setClients_1.jwt_secret);
+                    console.log("decoded user: ", decoded);
+                    id = decoded.id;
+                    if (!mongoose_1["default"].Types.ObjectId.isValid(id)) {
                         throw new Error("Invalid user ID");
                     }
-                    console.log("the user from get my product: " + user);
+                    console.log("the user from get my product: " + id);
                     if (!user)
                         throw new Error("Missing required information");
-                    return [4 /*yield*/, purchaseModel_1.PurchaseModel.find({ clientId: user }).populate('productId').populate('clientId').exec()];
+                    return [4 /*yield*/, purchaseModel_1.PurchaseModel.find({ clientId: id }).populate('productId').populate('clientId').exec()];
                 case 1:
                     product = _a.sent();
                     if (!product)
@@ -95,13 +104,3 @@ function getProducts(req, res) {
     });
 }
 exports.getProducts = getProducts;
-// export async function getProductsByUserId(req: any, res: any) {
-//     try {
-//         const { userId } = req.params;
-//         const products = await Product.find({ userId });
-//         res.status(200).send({ products });
-//     } catch (error: any) {
-//         console.log(error);
-//         res.status(500).json({ message: `Internal server error ${error.message} ` });
-//     }
-// }

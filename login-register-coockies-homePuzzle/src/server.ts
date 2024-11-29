@@ -1,8 +1,10 @@
 import express from 'express'
 import mongoose from "mongoose";
 import cookieParser from 'cookie-parser';  
+import 'dotenv/config';
 const app = express()
 const port = 3000;
+
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -13,7 +15,7 @@ app.get('/', (req, res) => {
 })
 
 //DB
-const dbUrl = "mongodb+srv://yosefib88:FYdIUMhMIwGscX4y@cluster0.b5vsm.mongodb.net"
+const dbUrl = process.env.DB_URL;
 const database = 'login_register_cookies_homePuzzle';
 
 //connection

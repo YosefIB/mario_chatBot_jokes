@@ -38,18 +38,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.addToCart = void 0;
 var purchaseModel_1 = require("../../model/purchase/purchaseModel");
+var setClients_1 = require("../clients/setClients");
+var jwt_simple_1 = require("jwt-simple");
+require("dotenv/config");
 function addToCart(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var user, productId, error_1;
+        var user, decoded, id, productId, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     user = req.cookies.user;
+                    if (!setClients_1.jwt_secret)
+                        throw new Error("Missing JWT secret");
+                    decoded = jwt_simple_1["default"].decode(user, setClients_1.jwt_secret);
+                    id = decoded.id;
                     productId = req.body.productId;
                     if (!productId || !user)
                         throw new Error("Missing required information");
-                    return [4 /*yield*/, purchaseModel_1.PurchaseModel.create({ productId: productId, clientId: user })];
+                    return [4 /*yield*/, purchaseModel_1.PurchaseModel.create({ productId: productId, clientId: id })];
                 case 1:
                     _a.sent();
                     res.status(200).json({ message: "Product added to cart" });
