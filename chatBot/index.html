@@ -4,21 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="./dist/index.js" defer></script>
 </head>
 <body>
-    <h1>Client Management System</h1>
-    <form onsubmit="handleAddClient(event)">
-        <input type="text" name="firstName" placeholder="First Name" required><br>
-        <input type="text" name="lastName" placeholder="Family Name" required><br>
-        <input type="email" name="email" placeholder="Email"><br>
-        <input type="tel" name="phone" placeholder="Phone number"><br><br>
-        <label for="">תאריך לידה שלך בבקשה</label><br>
-        <input type="date" name="date" placeholder="Date of Birth"><br><br>
-        <button>ADD Client</button>
-        <button onclick="handleShowClients()">Show Clients</button>
-    </form>
-    <div id="show"></div>
     <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,7 +56,49 @@
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
+
+    <script>
+        const messagesContainer = document.getElementById('chatbot-messages');
+
+        function sendMessage() {
+            const input = document.getElementById('message');
+            const message = input.value.trim();
+            if (message) {
+                addMessage('User', message);
+                getBotResponse(message);
+                input.value = '';
+            }
+        }
+
+        function addMessage(sender, message) {
+            const div = document.createElement('div');
+            div.textContent = `${sender}: ${message}`;
+            messagesContainer.appendChild(div);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getBotResponse(userMessage) {
+            let response = 'I didn\'t understand that. Can you try again?';
+
+            // Define simple responses
+            const responses = {
+                'hello': 'Hi there!',
+                'how are you': 'I\'m just a bot, but I\'m good!',
+                'bye': 'Goodbye!'
+            };
+
+            // Match response
+            const lowerCaseMessage = userMessage.toLowerCase();
+            console.log(lowerCaseMessage);
+            if (responses[lowerCaseMessage]) {
+                response = responses[lowerCaseMessage];
+            }
+
+            addMessage('Bot', response);
+        }
+    </script>
 </body>
 </html>
+
 </body>
 </html>

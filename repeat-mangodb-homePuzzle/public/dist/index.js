@@ -34,6 +34,70 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var messagesContainer = document.getElementById('chatbot-messages');
+if (!messagesContainer)
+    throw new Error('Chatbot messages container not found');
+function getBotResponse(userMessage) {
+    return __awaiter(this, void 0, void 0, function () {
+        var apiKey, apiUrl, response, data, botMessage;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    apiKey = 'org-g27biO2CiA2UfqgPV2fIwz1c';
+                    apiUrl = 'https://api.openai.com/v1/chat/completions';
+                    return [4 /*yield*/, fetch(apiUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': "Bearer " + apiKey
+                            },
+                            body: JSON.stringify({
+                                model: 'gpt-3.5-turbo',
+                                messages: [{ role: 'user', content: userMessage }]
+                            })
+                        })];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    botMessage = data.choices[0].message.content;
+                    addMessage('Bot', botMessage);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function sendMessage() {
+    var input = document.getElementById('message');
+    var message = input.value.trim();
+    if (message) {
+        addMessage('User', message);
+        getBotResponse(message);
+        input.value = '';
+    }
+}
+function addMessage(sender, message) {
+    var div = document.createElement('div');
+    div.textContent = sender + ": " + message;
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+// function getBotResponse(userMessage) {
+//     let response = 'I didn\'t understand that. Can you try again?';
+//     // Define simple responses
+//     const responses = {
+//         'hello': 'Hi there!',
+//         'how are you': 'I\'m just a bot, but I\'m good!',
+//         'bye': 'Goodbye!'
+//     };
+//     // Match response
+//     const lowerCaseMessage = userMessage.toLowerCase();
+//     if (responses[lowerCaseMessage]) {
+//         response = responses[lowerCaseMessage];
+//     }
+//     addMessage('Bot', response);
+// }
 function handleAddClient(ev) {
     return __awaiter(this, void 0, void 0, function () {
         var formData, firstName, lastName, email, phone, date, yearOfBirth, response, data, err_1;

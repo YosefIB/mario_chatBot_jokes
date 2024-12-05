@@ -1,3 +1,67 @@
+const messagesContainer = document.getElementById('chatbot-messages') as HTMLDivElement;
+if (!messagesContainer)
+    throw new Error('Chatbot messages container not found');
+
+async function getBotResponse(userMessage) {
+    const apiKey = 'org-g27biO2CiA2UfqgPV2fIwz1c'; // הכנס את המפתח שלך
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [{ role: 'user', content: userMessage }],
+        }),
+    });
+
+    const data = await response.json();
+    const botMessage = data.choices[0].message.content;
+    addMessage('Bot', botMessage);
+}
+
+
+
+function sendMessage() {
+    const input = document.getElementById('message') as HTMLInputElement;
+    const message = input.value.trim();
+    if (message) {
+        addMessage('User', message);
+        getBotResponse(message);
+        input.value = '';
+    }
+}
+
+function addMessage(sender, message) {
+    const div = document.createElement('div');
+    div.textContent = `${sender}: ${message}`;
+    messagesContainer.appendChild(div);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// function getBotResponse(userMessage) {
+//     let response = 'I didn\'t understand that. Can you try again?';
+
+//     // Define simple responses
+//     const responses = {
+//         'hello': 'Hi there!',
+//         'how are you': 'I\'m just a bot, but I\'m good!',
+//         'bye': 'Goodbye!'
+//     };
+
+//     // Match response
+//     const lowerCaseMessage = userMessage.toLowerCase();
+//     if (responses[lowerCaseMessage]) {
+//         response = responses[lowerCaseMessage];
+//     }
+
+//     addMessage('Bot', response);
+// }
+
+
 async function handleAddClient(ev: any) {
     try {
         ev.preventDefault();
