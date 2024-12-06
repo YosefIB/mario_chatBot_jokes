@@ -43,7 +43,7 @@ function getBotResponse(userMessage) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    apiKey = 'org-g27biO2CiA2UfqgPV2fIwz1c';
+                    apiKey = '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';
                     apiUrl = 'https://api.openai.com/v1/chat/completions';
                     return [4 /*yield*/, fetch(apiUrl, {
                             method: 'POST',
@@ -71,6 +71,7 @@ function getBotResponse(userMessage) {
 function sendMessage() {
     var input = document.getElementById('message');
     var message = input.value.trim();
+    console.log(message);
     if (message) {
         addMessage('User', message);
         getBotResponse(message);
@@ -83,7 +84,7 @@ function addMessage(sender, message) {
     messagesContainer.appendChild(div);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-// function getBotResponse(userMessage) {
+// function getBotResponse(userMessage) {   // hard coded
 //     let response = 'I didn\'t understand that. Can you try again?';
 //     // Define simple responses
 //     const responses = {
