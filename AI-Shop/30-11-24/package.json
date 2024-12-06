@@ -19,9 +19,11 @@
         "typescript": "^5.6.3"
     },
     "dependencies": {
+        "chatgpt": "^5.2.5",
         "cookie-parser": "^1.4.7",
         "dotenv": "^16.4.5",
         "express": "^4.21.1",
-        "mongoose": "^8.8.1"
+        "mongoose": "^8.8.1",
+        "react-chatbot": "^0.0.1"
     }
 }
