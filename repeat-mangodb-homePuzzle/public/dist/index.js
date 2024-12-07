@@ -43,7 +43,7 @@ function getBotResponse(userMessage) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    apiKey = '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';
+                    apiKey = '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';
                     apiUrl = 'https://api.openai.com/v1/chat/completions';
                     return [4 /*yield*/, fetch(apiUrl, {
                             method: 'POST',

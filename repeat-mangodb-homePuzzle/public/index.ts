@@ -3,7 +3,7 @@ if (!messagesContainer)
     throw new Error('Chatbot messages container not found');
 
 async function getBotResponse(userMessage) {
-    const apiKey = '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'; // הכנס את המפתח שלך
+    const apiKey = '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'; // הכנס את המפתח שלך
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const response = await fetch(apiUrl, {

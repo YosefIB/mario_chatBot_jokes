@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
+import axios from 'axios';
+
 
 const app = express();
 const port = 3000;
@@ -108,6 +110,29 @@ app.delete('/api/delete-post', (req: any, res: any) => {
     console.log("Post deleted successfully");
     console.log(posts)
 });
+
+app.post('/chat', async (req, res) => {
+    const userMessage = req.body.message;
+
+    try {
+        const response = await axios.post<{ choices: [{ message: { content: string } }] }>('https://api.openai.com/v1/chat/completions', {
+            model: 'gpt-4',
+            messages: [{ role: 'user', content: userMessage }]
+        }, {
+            headers: {
+                Authorization: `Bearer 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`
+            }
+        });
+
+        res.send({ botResponse: response.data.choices[0].message.content });
+    } catch (error) {
+        res.status(500).send({ botResponse: 'שגיאה בתשובת הבוט.' });
+    }
+});
+
+
+
+
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

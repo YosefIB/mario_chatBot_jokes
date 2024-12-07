@@ -2,6 +2,7 @@
 exports.__esModule = true;
 var express_1 = require("express");
 var mongoose_1 = require("mongoose");
+var path_1 = require("path");
 var app = express_1["default"]();
 var port = 3000;
 app.use(express_1["default"].json());
@@ -24,3 +25,22 @@ app.use("/api/clients", clientRoutes_1["default"]);
 app.listen(port, function () {
     console.log("Example app listening on port " + port);
 });
+// שליחה של דף HTML ללקוח
+app.use(express_1["default"].static(path_1["default"].join(__dirname, 'public')));
+// Endpoint לקבלת הודעות מהלקוח
+// app.post('/chat', async (req, res) => {
+//     const userMessage = req.body.message;
+//     try {
+//         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+//             model: 'gpt-4',
+//             messages: [{ role: 'user', content: userMessage }]
+//         }, {
+//             headers: {
+//                 Authorization: `Bearer YOUR_API_KEY`
+//             }
+//         });
+//         res.send({ botResponse: response.data.choices[0].message.content });
+//     } catch (error) {
+//         res.status(500).send({ botResponse: 'שגיאה בתשובת הבוט.' });
+//     }
+// });

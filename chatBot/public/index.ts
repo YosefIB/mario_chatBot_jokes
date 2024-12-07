@@ -65,3 +65,38 @@ function register(){
 }
 
 // View
+
+
+
+const chatBox = document.getElementById('chatBox');
+const userInput = document.getElementById('userInput');
+
+async function sendMessage() {
+    const userMessage = userInput.value.trim();
+    if (!userMessage) return;
+
+    // הצגת הודעת המשתמש בצ'אט
+    appendMessage('user', userMessage);
+    userInput.value = '';
+
+    try {
+        // שליחת הודעת המשתמש לשרת וקבלת תשובת הבוט
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+        });
+        const data = await response.json();
+        appendMessage('bot', data.botResponse);
+    } catch (error) {
+        appendMessage('bot', 'שגיאה בחיבור לשרת.');
+    }
+}
+
+function appendMessage(sender, message) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('chat-message', `${sender}-message`);
+    messageElement.textContent = message;
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight; // גלילה לתחתית הצ'אט
+}
