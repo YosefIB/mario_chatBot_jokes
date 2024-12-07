@@ -1,0 +1,11 @@
+"use strict";
+exports.__esModule = true;
+var express_1 = require("express");
+var setClients_1 = require("../controllers/clients/setClients");
+var getClients_1 = require("../controllers/clients/getClients");
+var clientRouter = express_1["default"].Router();
+clientRouter.post("/add-client", setClients_1.register);
+clientRouter.post("/login-client", setClients_1.login);
+clientRouter.get("/get-all-clients", getClients_1.getAllClients);
+clientRouter.post("/get-client", getClients_1.getClient);
+exports["default"] = clientRouter;

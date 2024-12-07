@@ -2,9 +2,9 @@ const messagesContainer = document.getElementById('chatbot-messages') as HTMLDiv
 if (!messagesContainer)
     throw new Error('Chatbot messages container not found');
 
-let isRequestInProgress = false;
+let isRequestInProgress = false;   /* כדי לעצור את הצ'ט עד שמקבלים תשובה */
 
-async function getBotResponse(userMessage) {
+async function getBotResponse(userMessage) {      /*  פונקציה שפונה לשרת של CHATGPT */
     if (isRequestInProgress){
         alert('Please wait before sending another message.');
         return;
@@ -67,26 +67,6 @@ function addMessage(sender, message) {
     messagesContainer.appendChild(div);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-
-// function getBotResponse(userMessage) {   // hard coded
-//     let response = 'I didn\'t understand that. Can you try again?';
-
-//     // Define simple responses
-//     const responses = {
-//         'hello': 'Hi there!',
-//         'how are you': 'I\'m just a bot, but I\'m good!',
-//         'bye': 'Goodbye!'
-//     };
-
-//     // Match response
-//     const lowerCaseMessage = userMessage.toLowerCase();
-//     if (responses[lowerCaseMessage]) {
-//         response = responses[lowerCaseMessage];
-//     }
-
-//     addMessage('Bot', response);
-// }
-
 
 async function handleAddClient(ev: any) {
     try {

@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var messagesContainer = document.getElementById('chatbot-messages');
 if (!messagesContainer)
     throw new Error('Chatbot messages container not found');
-var isRequestInProgress = false;
+var isRequestInProgress = false; /* כדי לעצור את הצ'ט עד שמקבלים תשובה */
 function getBotResponse(userMessage) {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
@@ -109,21 +109,6 @@ function addMessage(sender, message) {
     messagesContainer.appendChild(div);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-// function getBotResponse(userMessage) {   // hard coded
-//     let response = 'I didn\'t understand that. Can you try again?';
-//     // Define simple responses
-//     const responses = {
-//         'hello': 'Hi there!',
-//         'how are you': 'I\'m just a bot, but I\'m good!',
-//         'bye': 'Goodbye!'
-//     };
-//     // Match response
-//     const lowerCaseMessage = userMessage.toLowerCase();
-//     if (responses[lowerCaseMessage]) {
-//         response = responses[lowerCaseMessage];
-//     }
-//     addMessage('Bot', response);
-// }
 function handleAddClient(ev) {
     return __awaiter(this, void 0, void 0, function () {
         var formData, firstName, lastName, email, phone, date, yearOfBirth, response, data, err_1;
