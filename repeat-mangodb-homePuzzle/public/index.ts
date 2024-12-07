@@ -2,10 +2,18 @@ const messagesContainer = document.getElementById('chatbot-messages') as HTMLDiv
 if (!messagesContainer)
     throw new Error('Chatbot messages container not found');
 
+let isRequestInProgress = false;
+
 async function getBotResponse(userMessage) {
+    if (isRequestInProgress){
+        alert('Please wait before sending another message.');
+        return;
+    }
+    isRequestInProgress = true;
     const apiKey = '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'; // הכנס את המפתח שלך
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
+    try{
+        
     const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -19,8 +27,25 @@ async function getBotResponse(userMessage) {
     });
 
     const data = await response.json();
-    const botMessage = data.choices[0].message.content;
-    addMessage('Bot', botMessage);
+    if (response.ok)
+    {
+        const botMessage = data.choices[0].message.content;
+        addMessage('Bot', botMessage);
+     }
+     else
+     {
+        console.error('Error:', data);
+        addMessage('Bot', 'Error: ' + (data.error?.message || 'Unknown error.'));
+
+     }
+    }
+    catch (error){
+        console.error('Error:', error);
+        addMessage('Bot', 'Error: Unable to get bot response.');
+    }
+    finally{
+        isRequestInProgress = false;
+    }
 }
 
 

@@ -37,14 +37,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var messagesContainer = document.getElementById('chatbot-messages');
 if (!messagesContainer)
     throw new Error('Chatbot messages container not found');
+var isRequestInProgress = false;
 function getBotResponse(userMessage) {
+    var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var apiKey, apiUrl, response, data, botMessage;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var apiKey, apiUrl, response, data, botMessage, error_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
+                    if (isRequestInProgress) {
+                        alert('Please wait before sending another message.');
+                        return [2 /*return*/];
+                    }
+                    isRequestInProgress = true;
                     apiKey = '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';
                     apiUrl = 'https://api.openai.com/v1/chat/completions';
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 4, 5, 6]);
                     return [4 /*yield*/, fetch(apiUrl, {
                             method: 'POST',
                             headers: {
@@ -56,14 +66,29 @@ function getBotResponse(userMessage) {
                                 messages: [{ role: 'user', content: userMessage }]
                             })
                         })];
-                case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.json()];
                 case 2:
-                    data = _a.sent();
-                    botMessage = data.choices[0].message.content;
-                    addMessage('Bot', botMessage);
-                    return [2 /*return*/];
+                    response = _b.sent();
+                    return [4 /*yield*/, response.json()];
+                case 3:
+                    data = _b.sent();
+                    if (response.ok) {
+                        botMessage = data.choices[0].message.content;
+                        addMessage('Bot', botMessage);
+                    }
+                    else {
+                        console.error('Error:', data);
+                        addMessage('Bot', 'Error: ' + (((_a = data.error) === null || _a === void 0 ? void 0 : _a.message) || 'Unknown error.'));
+                    }
+                    return [3 /*break*/, 6];
+                case 4:
+                    error_1 = _b.sent();
+                    console.error('Error:', error_1);
+                    addMessage('Bot', 'Error: Unable to get bot response.');
+                    return [3 /*break*/, 6];
+                case 5:
+                    isRequestInProgress = false;
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
             }
         });
     });
